@@ -6,7 +6,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { mysignup } from "./network";
+import context from "./context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function SignUp() {
   const [signup, setSignup] = useState({
     name: "",
@@ -15,14 +18,44 @@ export default function SignUp() {
     password: "",
     address: "",
   });
-
+  const { state, setState } = useContext(context);
   const navigation = useNavigation();
 
   const handlesignup = async () => {
     try {
-      const res = await signup(signup);
-      console.log(res);
+      const res = await mysignup(
+        signup.name,
+        signup.phone,
+        signup.email,
+        signup.password,
+        signup.address
+      );
+
       if (res && res.success) {
+        setState({
+          ...state,
+          profile: {
+            name: signup.name,
+            phone: signup.phone,
+            email: signup.email,
+
+            address: signup.address,
+          },
+        });
+        await AsyncStorage.setItem(
+          "userProfile",
+          JSON.stringify({
+            ...state,
+            profile: {
+              name: signup.name,
+              phone: signup.phone,
+              email: signup.email,
+
+              address: signup.address,
+            },
+          })
+        );
+
         navigation.navigate("login");
         alert("added succesfully");
       } else {

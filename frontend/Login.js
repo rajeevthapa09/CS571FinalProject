@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,22 +8,30 @@ import {
   StyleSheet,
 } from "react-native";
 import Layout from "./layout";
+import context from "./context";
+import { myLogin } from "./network";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const [login, setLogin] = useState({ email: "", password: "" });
+  const { state, setState } = useContext(context);
 
   const navigation = useNavigation();
 
-  const handleEmail = (text) => {
-    setLogin({ ...login, email: text });
-  };
+  const handleLoginButton = async () => {
+    try {
+      const ret = await myLogin(login.email, login.password);
+      if (ret && ret.success) {
+        setState({ ...state, token: ret.data });
+        console.log(state);
 
-  const handlePassword = (text) => {
-    setLogin({ ...login, password: text });
-  };
-
-  const handleLoginButton = () => {
-    navigation.navigate("home");
+        await AsyncStorage.setItem("token", ret.data);
+      } else {
+        alert("sign in again");
+      }
+    } catch (error) {
+      alert("error");
+    }
   };
   const handleSignUpButton = () => {
     navigation.navigate("sign-up");
@@ -34,14 +42,14 @@ export default function Login() {
       <Text>Please Login </Text>
       <TextInput
         style={styles.input}
-        value={login.password}
-        onChangeText={handleEmail}
+        value={login.email}
+        onChangeText={(text) => setLogin({ ...login, email: text })}
         placeholder="Email"
       />
       <TextInput
         style={styles.input}
         value={login.password}
-        onChangeText={handlePassword}
+        onChangeText={(text) => setLogin({ ...login, password: text })}
         maxLength={10}
         placeholder="password"
       />

@@ -4,9 +4,13 @@ import SignUp from "./signup";
 import Home from "./home";
 import { createStackNavigator } from "@react-navigation/stack";
 
+import { useContext } from "react";
+import context from "./context";
+
 const Stack = createStackNavigator();
 
 export default function Layout() {
+  const { state } = useContext(context);
   return (
     <Stack.Navigator>
       <Stack.Screen

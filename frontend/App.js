@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigaor } from '@react-navigation/stack';
 
-export default function App() {
+import FoodList from './FoodList'; // Import your FoodList component
+import EditFood from './EditFood'; // Import your EditFood component
+
+const Stack = createStackNavigor();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="FoodList">
+        <Stack.Screen name="FoodList" component={FoodList} options={{ title: 'Food List' }} />
+        <Stack.Screen name="EditFood" component={EditFood} options={{ title: 'Edit Food' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

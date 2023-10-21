@@ -29,9 +29,10 @@ app.put('/notes/:userEmail', async (req, res) => {
     try {
         req.body._id = new ObjectId();
         const ret = await db.collection(COLLECTION_NAME).updateOne({email: req.params.userEmail}, {$push : {notes: req.body}});
-        res.status(200).send({ success: true, data: ret });
+        const getData = await db.collection(COLLECTION_NAME).findOne({email: req.params.userEmail});
+        res.status(200).send({ success: true, data: getData.notes });
     } catch (err) {
-        res.status(500).send({ success: false, err: "DB error" })
+        res.status(500).send({ success: false, err: "DB error" }) 
     }
 })
 
@@ -40,6 +41,20 @@ app.get('/notes/:userEmail', async (req, res) => {
     try {
         const ret = await db.collection(COLLECTION_NAME).findOne({email: req.params.userEmail});
         res.status(200).send({ success: true, data: ret.notes });
+    } catch (err) {
+        res.status(500).send({ success: false, err: "DB error" })
+    }
+})
+
+// Edit Notes
+app.patch('/notes/:userEmail/note/:noteID', async (req, res) => {
+    try {
+        console.log("req.body.title", req.body);
+        const ret = await db.collection(COLLECTION_NAME).updateOne({ email: req.params.userEmail, "notes._id": new ObjectId(req.params.noteID) }, { $set: { "notes.$.title": req.body.title, "notes.$.comment" : req.body.comment } },
+        );
+        const getData = await db.collection(COLLECTION_NAME).findOne({email: req.params.userEmail});
+        console.log("getData", getData)
+        res.status(200).send({ success: true, data: getData.notes });
     } catch (err) {
         res.status(500).send({ success: false, err: "DB error" })
     }

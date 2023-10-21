@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableHighlight } from "react-native"
+import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
 import { useNavigation } from '@react-navigation/native';
 import { getNotes } from "../network";
 import { useEffect, useState } from "react";
@@ -9,14 +9,13 @@ export default function Notes() {
 
     const navigation = useNavigation();
     const addNote = () => {
-        navigation.navigate('addNotes');
+        navigation.navigate('addNotes', setNotes);
     }
 
     useEffect(() => {
         (async () => {
             const res = await getNotes("test@test.com");
             setNotes((prev) => res.data);
-            let timer = setTimeout(() => console.log("notes", notes), 1000);
         })()
     }, [])
 
@@ -30,25 +29,29 @@ export default function Notes() {
                 <View style={{ flex: 1.25 }}><Text>Dates</Text></View>
                 <View style={{ flex: 1 }}><Text></Text></View>
             </View>
-            {notes.map((note, index) => (
-                <View style={styles.notes} key={index}>
-                    <View style={{ flex: 1.5 }}><Text>{note.title}</Text></View>
-                    <View style={{ flex: 1.25 }}><Text>{note.date}</Text></View>
-                    <View style={{ flex: 1 }}>{<Display notes={notes}/>}</View>
-                </View>
-            ))}
+            <FlatList
+                data={notes}
+                renderItem={({ item, index }) => (<View style={styles.notes}>
+                    <View style={{ flex: 1.5 }}><Text>{item.title}</Text></View>
+                    <View style={{ flex: 1.25 }}><Text>{item.date}</Text></View>
+                    <View style={{ flex: 1 }}>{<Display note={item} setNotes={setNotes} />}</View>
+                </View>)}
+                keyExtractor={item => item._id.toString()}
+                scrollIndicatorInsets={{ right: 3 }}
+            />
+           
         </View>
     )
 }
 
-function Display({notes}) {
+function Display({note, setNotes}) {
     const navigation = useNavigation();
     const viewPressed = () => {
-        navigation.navigate("noteDetails", notes)
+        navigation.navigate('notesDetails', note);
     }
 
     const editPressed = () => {
-
+        navigation.navigate('editNotes', {note, setNotes});
     }
     return (
         <View style={{ flexDirection: "column" }}>

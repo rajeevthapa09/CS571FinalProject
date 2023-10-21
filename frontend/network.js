@@ -28,6 +28,20 @@ export async function addNotes(emailID, data) {
         }
     });
     const result = await response.json();
+    return result;
+}
+
+export async function editNotes(emailID, noteID, data) {
+    console.log("noteId", noteID);
+
+    const response = await fetch(`http://localhost:5001/notes/${emailID}/note/${noteID}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const result = await response.json();
     console.log("res network", result);
     return result;
 }

@@ -1,20 +1,24 @@
 import {useContext, useState} from 'react';
 import { View, Text, TouchableHighlight, TextInput } from "react-native"
 import { useNavigation } from '@react-navigation/native';
+import { addNotes } from '../network';
 
 import {
   StyleSheet,
 } from 'react-native';
 import GlobalContext from '../context';
 
-const AddCourse = () => {
+const AddCourse = ({route}) => {
   const {state, setState} = useContext(GlobalContext);
    const [title, setTitle] = useState();
    const [comment, setComment] = useState();
    const [date, setDate] = useState(new Date().toLocaleString());
    const navigate = useNavigation();
 
-   const addNotesBtn = () =>{
+   const addNotesBtn = async() =>{
+        const res = await addNotes("test@test.com", {title, comment, date});
+        const setNotes = route.params;
+        setNotes(res.data);
         navigate.goBack();
    };
 

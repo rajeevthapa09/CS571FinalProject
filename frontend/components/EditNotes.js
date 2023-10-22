@@ -1,18 +1,23 @@
 
 import { Text, View, TextInput, StyleSheet, TouchableHighlight } from "react-native"
 import { useState } from "react";
-import { editNotes } from "../network";
+import { editNotes } from "../utils/network";
 import { useNavigation } from '@react-navigation/native';
 
 export default function EditNotes({ route }) {
     console.log(route.params)
     const [notes, setNotes] = useState({ title: route.params.note.title, comment: route.params.note.comment, date: route.params.note.date });
     const navigate = useNavigation();
-    const submitEdit = async() => {
-        const res = await editNotes("test@test.com", route.params.note._id.toString(), notes);
-        const setNotes = route.params.setNotes;
-        setNotes(res.data);
-        navigate.goBack();
+    const submitEdit = async () => {
+        try {
+            const res = await editNotes("test@test.com", route.params.note._id.toString(), notes);
+            const setNotes = route.params.setNotes;
+            setNotes(res.data);
+            navigate.goBack();
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     return (
         <View>

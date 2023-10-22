@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
 import { useNavigation } from '@react-navigation/native';
-import { getNotes } from "../network";
+import { getNotes } from "../utils/network";
 import { useEffect, useState } from "react";
 
 export default function Notes() {
@@ -14,8 +14,12 @@ export default function Notes() {
 
     useEffect(() => {
         (async () => {
-            const res = await getNotes("test@test.com");
-            setNotes((prev) => res.data);
+            try {
+                const res = await getNotes("test@test.com");
+                setNotes((prev) => res.data);
+            } catch (error) {
+                console.log(error);
+            }
         })()
     }, [])
 
@@ -39,19 +43,19 @@ export default function Notes() {
                 keyExtractor={item => item._id.toString()}
                 scrollIndicatorInsets={{ right: 3 }}
             />
-           
+
         </View>
     )
 }
 
-function Display({note, setNotes}) {
+function Display({ note, setNotes }) {
     const navigation = useNavigation();
     const viewPressed = () => {
         navigation.navigate('notesDetails', note);
     }
 
     const editPressed = () => {
-        navigation.navigate('editNotes', {note, setNotes});
+        navigation.navigate('editNotes', { note, setNotes });
     }
     return (
         <View style={{ flexDirection: "column" }}>
@@ -98,23 +102,23 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     edges: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: 5,
-      minWidth: 50,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 5,
+        minWidth: 50,
     },
     button: {
-      borderWidth: 1,
-      borderColor: '#0066CC',
-      borderRadius: 14,
-      paddingHorizontal: 10,
-      paddingVertical: 3,
-      backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#0066CC',
+        borderRadius: 14,
+        paddingHorizontal: 10,
+        paddingVertical: 3,
+        backgroundColor: '#fff',
     },
     buttonText: {
-      color: '#0066CC',
-      fontSize: 12,
-      textAlign: 'center',
+        color: '#0066CC',
+        fontSize: 12,
+        textAlign: 'center',
     },
 })

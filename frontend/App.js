@@ -5,11 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useState } from 'react';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import GlobalContext from "./context"
+import GlobalContext from "./utils/context"
 import Constants from 'expo-constants';
-import NavigationFood from './components/NavigationFood';
-import NavigationNotes from './components/NavigationNotes';
-import NavigationProfile from './components/NavigationProfile';
+import NavigationNotes from './stackScreen/NavigationNotes';
+import FoodsScreen from "./stackScreen/FoodsScreen"
 
 const Tab = createBottomTabNavigator();
 export default function App() {
@@ -18,22 +17,28 @@ export default function App() {
   return (
     <GlobalContext.Provider value={{ state, setState }}>
       <NavigationContainer>
-        <Tab.Navigator >
+      <Tab.Navigator >
+        <Tab.Screen
+          name="foods"
+          component={FoodsScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="food-apple" color={color} size={26} />
+            ),
+          }}
+        />
+        
           <Tab.Screen name="notes" component={NavigationNotes} options={{
-             headerShown: false, tabBarIcon: ({ color }) => (
+            headerShown: false, tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="microsoft-onenote" color={color} size={26} />
             )
           }} />
-          <Tab.Screen name="foods" component={NavigationFood} options={{
-            headerShown: false, tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="food-apple" color={color} size={26} />
-            )
-          }} />
-          <Tab.Screen name="profile" component={NavigationProfile} options={{
+          {/* <Tab.Screen name="profile" component={NavigationProfile} options={{
             headerShown: false, tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="information" color={color} size={26} />
             )
-          }} />
+          }} /> */}
         </Tab.Navigator>
       </NavigationContainer>
     </GlobalContext.Provider>

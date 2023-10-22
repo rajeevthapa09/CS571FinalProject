@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
 import { useNavigation } from '@react-navigation/native';
-import { getNotes } from "../utils/network";
+import { getNotes } from "../../utils/network";
 import { useEffect, useState } from "react";
 
 export default function Notes() {

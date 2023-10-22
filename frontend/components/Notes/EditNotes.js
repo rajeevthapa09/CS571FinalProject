@@ -1,7 +1,7 @@
 
 import { Text, View, TextInput, StyleSheet, TouchableHighlight } from "react-native"
 import { useState } from "react";
-import { editNotes } from "../utils/network";
+import { editNotes } from "../../utils/network";
 import { useNavigation } from '@react-navigation/native';
 
 export default function EditNotes({ route }) {

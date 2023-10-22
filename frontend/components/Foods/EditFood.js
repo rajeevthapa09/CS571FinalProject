@@ -1,8 +1,8 @@
 import { Text, Pressable, TextInput, View } from "react-native"
 import React, { useState } from "react";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { editFood } from "../utils/network";
-import styles from '../styles/myStyles';
+import { editFood } from "../../utils/network";
+import styles from '../../styles/myStyles';
 
 export default function EditFood() {
     const navigation = useNavigation();

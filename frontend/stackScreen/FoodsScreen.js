@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import FoodList from '../components/FoodList';
-import AddFood from '../components/AddFood';
-import EditFood from '../components/EditFood';
-import FoodDetails from '../components/FoodDetails';
+import FoodList from '../components/Foods/FoodList';
+import AddFood from '../components/Foods/AddFood';
+import EditFood from '../components/Foods/EditFood';
+import FoodDetails from '../components/Foods/FoodDetails';
 const Stack = createNativeStackNavigator();
 export default function FoodsScreen() {
 

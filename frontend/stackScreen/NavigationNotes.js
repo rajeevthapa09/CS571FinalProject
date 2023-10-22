@@ -1,9 +1,9 @@
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Notes from "../components/Notes";
-import NoteDetails from "../components/NoteDetails";
-import AddNotes from "../components/AddNotes"
-import EditNotes from '../components/EditNotes';
+import Notes from "../components/Notes/Notes";
+import NoteDetails from "../components/Notes/NoteDetails";
+import AddNotes from "../components/Notes/AddNotes"
+import EditNotes from '../components/Notes/EditNotes';
 
 export default function NavigationNotes() {
     const Stack = createNativeStackNavigator();

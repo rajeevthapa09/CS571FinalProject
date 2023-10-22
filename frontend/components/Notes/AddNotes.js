@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
 import { View, Text, TouchableHighlight, TextInput } from "react-native"
 import { useNavigation } from '@react-navigation/native';
-import { addNotes } from '../utils/network';
+import { addNotes } from '../../utils/network';
 
 import {
   StyleSheet,
 } from 'react-native';
-import GlobalContext from '../utils/context';
+import GlobalContext from '../../utils/context';
 
 const AddCourse = ({ route }) => {
   const { state, setState } = useContext(GlobalContext);

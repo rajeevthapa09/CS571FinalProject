@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Alert, View, Text, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../styles/myStyles';
-import { deleteFood } from "../utils/network";
+import styles from '../../styles/myStyles';
+import { deleteFood } from "../../utils/network";
 
 const Food = ({ food, onRefresh }) => {
     const { index, _id, name, origin, price, quantity, date, image} = food;

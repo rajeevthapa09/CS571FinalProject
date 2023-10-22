@@ -1,7 +1,7 @@
-import { getFoodList } from "../utils/network";
+import { getFoodList } from "../../utils/network";
 import { useEffect, useState } from 'react';
 import { SafeAreaView, FlatList, Pressable, Text, View, TextInput } from 'react-native';
-import styles from '../styles/myStyles';
+import styles from '../../styles/myStyles';
 import Food from './Food';
 import { useNavigation } from '@react-navigation/native';
 

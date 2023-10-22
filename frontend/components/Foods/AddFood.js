@@ -1,9 +1,9 @@
 import { Alert, Text, Pressable, TextInput, View } from "react-native"
 import React, { useState, useContext } from "react";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import styles from '../styles/myStyles';
-import { addFood } from '../utils/network';
-import GlobalContext from "../utils/context";
+import styles from '../../styles/myStyles';
+import { addFood } from '../../utils/network';
+import GlobalContext from "../../utils/context";
 
 export default function AddFood() {
 

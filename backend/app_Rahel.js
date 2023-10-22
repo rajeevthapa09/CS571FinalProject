@@ -24,11 +24,8 @@ async function connectDB() {
   }
 }
 
+
 connectDB();
-
-// Rest of your routes...
-
-
 
 app.post("/restaurants", async (req, res) => {
   try {
@@ -65,13 +62,11 @@ app.put("/restaurants/:restaurantId/foods", async (req, res) => {
   }
 });
 
-  
   app.patch("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
     try {
       const { name, origin, price, date, quantity } = req.body;
       const restaurantId = req.params.restaurantId;
       const foodId = req.params.foodId;
-  
       const result = await collection.updateOne(
         {
           _id: new ObjectId(restaurantId),
@@ -93,7 +88,6 @@ app.put("/restaurants/:restaurantId/foods", async (req, res) => {
     }
   });
   
-
 app.delete("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
     try {
       const result = await collection.updateOne(
@@ -109,7 +103,6 @@ app.delete("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
     }
   });
   
-
   app.get("/restaurants/:restaurantId/foods", async (req, res) => {
     try {
       const restaurantId = req.params.restaurantId;

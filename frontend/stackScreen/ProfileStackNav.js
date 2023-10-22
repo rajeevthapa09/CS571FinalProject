@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import Profile from "./Profile";
-import UpdateProfile from "./UpdateProfile";
+import Profile from "../components/Profile/Profile";
+import UpdateProfile from "../components/Profile/UpdateProfile";
 
 const Stack = createStackNavigator();
 

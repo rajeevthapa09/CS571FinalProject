@@ -10,7 +10,7 @@ import { useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Layout from "./Layout";
 import GlobalContext from "../../utils/context";
-import { getProfile } from "../../network";
+import { getProfile } from "../../utils/network";
 
 export default function Profile() {
   const [updateFile, setUpdateFile] = useState({

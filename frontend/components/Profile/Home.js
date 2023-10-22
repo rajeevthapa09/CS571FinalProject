@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Text, View } from "react-native";
 import Profile from "./Profile";
-import ProfileNavigator from "./ProfileStackNav";
+import ProfileNavigator from "../../stackScreen/ProfileStackNav";
 import NavigationNotes from '../../stackScreen/NavigationNotes';
 import FoodsScreen from "../../stackScreen/FoodsScreen"
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
@@ -31,8 +31,10 @@ export default function Home() {
             <Tab.Screen
                 name="profile"
                 component={ProfileNavigator}
-                options={{ headerShown: false }}
-            />
+                options={{ headerShown: false ,tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons name="information" color={color} size={26} />
+                )
+            }} />
         </Tab.Navigator>
     );
 }

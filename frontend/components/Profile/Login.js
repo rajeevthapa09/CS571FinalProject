@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Layout from "./Layout";
 import GlobalContext from "../../utils/context";
-import { myLogin } from "../../network";
+import { myLogin } from "../../utils/network";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
@@ -24,7 +24,6 @@ export default function Login() {
       if (ret && ret.success) {
         setState({ ...state, token: ret.data });
         console.log(state);
-
         await AsyncStorage.setItem("token", ret.data);
       } else {
         alert("sign in again");

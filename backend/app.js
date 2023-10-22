@@ -193,7 +193,7 @@ app.post("/signup", async (req, res) => {
 
     const result = await db
       .collection(COLLECTION_NAME)
-      .insertOne({ ...body, password: encrted });
+      .insertOne({ ...body, password: encrted, foods:[], notes:[] });
 
     res.send({ success: true, data: result });
   } catch (error) {

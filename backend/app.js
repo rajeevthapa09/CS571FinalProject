@@ -2,6 +2,9 @@ const { MongoClient, ObjectId } = require('mongodb');
 const express = require("express");
 const app = express();
 const cors = require('cors');
+const bycrpt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const PRIVATE_KEY = "team1";
 let db = null;
 let COLLECTION_NAME = "restaurants";
 

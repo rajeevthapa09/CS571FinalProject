@@ -233,7 +233,7 @@ export async function getFoodList() {
 
       // Assuming 'foods' is an array you want to push to, it should be updated after a successful response.
       // Note that you should probably use a more centralized state management method, such as Redux, in a real application.
-      foods.push(food);
+      // foods.push(food);
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };

@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
 import { useNavigation } from '@react-navigation/native';
 import { getNotes } from "../../utils/network";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import GlobalContext from "../../utils/context";
 
 export default function Notes() {
+    const {state, setState} = useContext(GlobalContext)
 
     const [notes, setNotes] = useState([]);
 
@@ -15,7 +17,7 @@ export default function Notes() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await getNotes("test@test.com");
+                const res = await getNotes(state.userInfo.email, state.token);
                 setNotes((prev) => res.data);
             } catch (error) {
                 console.log(error);

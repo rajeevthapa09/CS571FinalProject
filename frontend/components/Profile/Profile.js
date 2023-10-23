@@ -10,34 +10,35 @@ import { useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Layout from "./Layout";
 import GlobalContext from "../../utils/context";
-import { getProfile } from "../../utils/network";
+import { getProfile, updateProfiles } from "../../utils/network";
 
 export default function Profile() {
-  const [updateFile, setUpdateFile] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    address: "",
-  });
   const { state, setState } = useContext(GlobalContext);
+  const [updateFile, setUpdateFile] = useState({
+    name: state.userInfo.name,
+    phone: state.userInfo.phone,
+    email: state.userInfo.email,
+    password: "",
+    address: state.userInfo.address,
+  });
 
+  console.log("updatefile", updateFile);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const res = await getProfile(state.token);
-        if (res && res.success) {
-          setState({ ...state, profile: res.data });
-          setUpdateFile(res.data);
-        }
-      } catch (error) {
-        alert("error");
-      }
-    }
-    getData();
-  }, [updateFile]);
+  // useEffect(() => {
+  //   async function getData() {
+  //     try {
+  //       const res = await getProfile(state.token);
+  //       if (res && res.success) {
+  //         setState({ ...state, profile: res.data });
+  //         setUpdateFile(res.data);
+  //       }
+  //     } catch (error) {
+  //       alert("error");
+  //     }
+  //   }
+  //   getData();
+  // }, [updateFile]);
   console.log(state);
   console.log(updateFile);
 
@@ -48,7 +49,35 @@ export default function Profile() {
   };
 
   const updatebtn = () => {
-    navigation.navigate("update", { updateFile });
+    // navigation.navigate("update", { updateFile });
+    (async () => {
+      try {
+        const res = await updateProfiles(state.token, updateFile);
+        // console.log(updateData);
+        console.log(res, "res");
+  
+        if (res && res.success) {
+          console.log("i am in")
+          // const updatted = res.data;
+          // if (updateData.password !== "") {
+          //   updatted.password = updateData.password;
+          // }
+          const updatted = res.data;
+          if (updateFile.password !== "") {
+            updatted.password = updateFile.password;
+          }
+          setState({ ...state, profile: updatted, userInfo:{...updateFile} });
+        //   if (updateData.password > 0) {
+        //     navigation.goBack();
+        //   }
+        // } else {
+        //   alert("enter password");
+        }
+      } catch (error) {
+        // alert("error");
+        console.log(error);
+      }
+    })()
   };
 
   return (
@@ -71,8 +100,19 @@ export default function Profile() {
         style={styles.input}
         value={updateFile.email}
         onChangeText={(text) => setUpdateFile({ ...updateFile, email: text })}
+        editable = {false}
         maxLength={10}
         placeholder="email"
+      />
+
+      <TextInput
+        style={styles.input}
+        value={updateFile.password}
+        onChangeText={(text) =>
+          setUpdateFile({ ...updateFile, password: text })
+        }
+        maxLength={10}
+        placeholder="Change Password"
       />
 
       <TextInput

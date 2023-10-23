@@ -8,7 +8,7 @@ export default function ProfileNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="profile"
+        name="profileUser"
         component={Profile}
         options={{ headerShown: false }}
       />

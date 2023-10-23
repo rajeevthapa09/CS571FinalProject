@@ -22,8 +22,8 @@ export default function Login() {
     try {
       const ret = await myLogin(login.email, login.password);
       if (ret && ret.success) {
-        setState({ ...state, token: ret.data });
-        console.log(state);
+        setState({ ...state, token: ret.data.token, userInfo: {name:ret.data.name, phone: ret.data.phone, email: ret.data.email, address: ret.data.address}});
+        console.log("userinfo", state, "ret", ret);
         await AsyncStorage.setItem("token", ret.data);
       } else {
         alert("sign in again");

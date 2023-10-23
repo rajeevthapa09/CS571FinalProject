@@ -1,16 +1,18 @@
 
 import { Text, View, TextInput, StyleSheet, TouchableHighlight } from "react-native"
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { editNotes } from "../../utils/network";
 import { useNavigation } from '@react-navigation/native';
+import GlobalContext from "../../utils/context";
 
 export default function EditNotes({ route }) {
     console.log(route.params)
+    const {state, setState} = useContext(GlobalContext)
     const [notes, setNotes] = useState({ title: route.params.note.title, comment: route.params.note.comment, date: route.params.note.date });
     const navigate = useNavigation();
     const submitEdit = async () => {
         try {
-            const res = await editNotes("test@test.com", route.params.note._id.toString(), notes);
+            const res = await editNotes(state.userInfo.email, route.params.note._id.toString(), notes, state.token);
             const setNotes = route.params.setNotes;
             setNotes(res.data);
             navigate.goBack();

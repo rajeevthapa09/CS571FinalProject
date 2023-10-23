@@ -238,7 +238,7 @@ app.post("/SignIn", async (req, res) => {
           PRIVATE_KEY
         );
 
-        return res.send({ success: true, data: token });
+        return res.send({ success: true, data: {token, name: currentOwner.name, phone: currentOwner.phone, email: currentOwner.email, address: currentOwner.address }});
       } else {
         return res.send({ success: false, error: "wrong password" });
       }
@@ -296,33 +296,30 @@ app.get("/profileData/user", async (req, res) => {
   }
 });
 
-app.post("/updateUser", async (req, res) => {
+app.put("/updateUser", async (req, res) => {
   const { ownerID } = req.currentuser;
   console.log("onwer", ownerID);
   try {
     const updatedData = req.body;
-    console.log(req);
+    console.log("updatedData", updatedData);
+    let result = null;
     if (updatedData.password) {
       updatedData.password = await bycrpt.hash(updatedData.password, 10);
-    }
-
-    const result = await db
+      result = await db
       .collection(COLLECTION_NAME)
       .updateOne({ _id: new ObjectId(ownerID) }, { $set: updatedData });
-    console.log(req.body);
-    if (result.modifiedCount === 1) {
+    }else{
+      result = await db
+      .collection(COLLECTION_NAME)
+      .updateOne({ _id: new ObjectId(ownerID) }, { $set: {name: updatedData.name, phone: updatedData.phone, address: updatedData.address} });
+    }
+
       return res.status(200).send({
         success: true,
         data: result,
       });
-    } else {
-      return res.status(404).send({
-        success: false,
-        error: "User not found or no changes made.",
-      });
-    }
+    
   } catch (error) {
-    console.error(error);
     return res.status(500).send({
       success: false,
       error: "An error occurred while updating user information.",

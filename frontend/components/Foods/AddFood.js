@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { View, Text, TouchableHighlight, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { addFood } from "../../utils/network";
 import { StyleSheet } from "react-native";
+import GlobalContext from "../../utils/context";
 
 const AddFood = ({ route }) => {
+  const {state, setState} = useContext(GlobalContext);
   const [name, setName] = useState();
   const [origin, setOrigin] = useState();
   const [price, setPrice] = useState();
@@ -16,7 +18,7 @@ const AddFood = ({ route }) => {
 
   const addFoodsBtn = async () => {
     try {
-      const res = await addFood("rahel@gggg", {
+      const res = await addFood(state.userInfo.email, state.token, {
         name,
         origin,
         price,

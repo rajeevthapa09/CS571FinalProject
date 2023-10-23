@@ -5,7 +5,7 @@ import Home from "./Home";
 import GlobalContext from "../../utils/context";
 
 export default function LayoutorHome() {
-  const [state, setState] = useState({ token: null, profile: [], foods: [] });
+  const [state, setState] = useState({ token: null, profile: [], userInfo: {}});
 
   useEffect(() => {
     const getToken = async () => {

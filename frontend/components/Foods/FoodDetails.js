@@ -14,7 +14,7 @@ export default function FoodDetails({ route }) {
           <Text style={styles.faculty}>Price: {food.price}</Text>
           <Text style={styles.faculty}>Quantity:{food.quantity}</Text>
           <Text style={styles.faculty}>Date: {food.date.toString()}</Text>
-          <Text style={styles.faculty}>Image: {food.image}</Text>
+          {/* <Text style={styles.faculty}>Image: {food.image}</Text> */}
         </View>
       </View>
     </View>

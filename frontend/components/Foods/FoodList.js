@@ -100,7 +100,7 @@ export default function FoodList() {
   useEffect(() => {
     async function getData() {
       try {
-        const ret = await getFoodList("test@test.com");
+        const ret = await getFoodList(state.userInfo.email, state.token);
         if (ret && ret.success) {
           setState({ ...state, foods: ret.data });
         }
@@ -115,17 +115,17 @@ export default function FoodList() {
     navigation.navigate("addfood", { onRefresh });
   };
 
-  const filteredData = [...state.foods].filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // const filteredData = [...state.foods].filter((item) =>
+  //   item.name.toLowerCase().includes(searchText.toLowerCase())
+  // );
 
-  let myfoodlist = [];
+  // let myfoodlist = [];
 
-  if (searchText !== "") {
-    myfoodlist = filteredData;
-  } else {
-    myfoodlist = state.foods;
-  }
+  // if (searchText !== "") {
+  //   myfoodlist = filteredData;
+  // } else {
+  //   myfoodlist = state.foods;
+  // }
 
   return (
     <SafeAreaView style={styles.root}>
@@ -145,7 +145,7 @@ export default function FoodList() {
           </Text>
         </Pressable>
         <FlatList
-          data={myfoodlist}
+          data={state.foods}
           keyExtractor={(item) => item._id}
           renderItem={({ item, index }) => (
             <Food food={{ ...item, index }} onRefresh={onRefresh} />

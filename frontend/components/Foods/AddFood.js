@@ -1,249 +1,99 @@
-import { Alert, Text, Pressable, TextInput, View } from "react-native"
-import React, { useState, useContext } from "react";
-import { useNavigation, useRoute } from '@react-navigation/native';
-import styles from '../../styles/myStyles';
+import { useContext, useState } from 'react';
+import { View, Text, TouchableHighlight, TextInput } from "react-native"
+import { useNavigation } from '@react-navigation/native';
 import { addFood } from '../../utils/network';
-import GlobalContext from "../../utils/context";
 
-export default function AddFood() {
+import {
+  StyleSheet,
+} from 'react-native';
+import GlobalContext from '../../utils/context';
 
-    //const {globalstate, setGlobalState}=useContext(GlobalContext);
+const AddFood = ({ route }) => {
+  const { state, setState } = useContext(GlobalContext);
+  const [name, setName] = useState();
+  const [origin, setOrigin] = useState();
+  const [price, setPrice] = useState();
+  const [quantity, setQuantity] = useState();
+  const [date, setDate] = useState(new Date().toLocaleString());
+  const [image, setImage] = useState();
 
-    const navigation = useNavigation();
-    const [state, setState] = useState(
-        {
-            name: "",
-            origin: "",
-            price: "",
-            quantity:"",
-            date: "",
-            image: ""
-        }, { date: '' })
+  const navigate = useNavigation();
 
-    const route = useRoute();
-    const { onRefresh } = route.params;
-
-    const handleSave = async () => {
-        try {
-            // Validate input variables
-            if (!state.name || typeof state.name !== 'string') {
-                Alert.alert('Error', 'Name must be a non-empty string');
-                return;
-            }
-
-            if (!state.price || isNaN(parseFloat(state.price))) {
-                Alert.alert('Error', 'Price must be a valid number');
-                return;
-            }
-
-            if (!state.quantity || isNaN(parseFloat(state.quantity))) {
-                Alert.alert('Error', 'Price must be a valid number');
-                return;
-            }
-            if (!state.origin || typeof state.origin !== 'string') {
-                Alert.alert('Error', 'Origin must be a non-empty string');
-                return;
-            }
-
-            const ret = await addFood(state);
-
-            onRefresh(); // reload FoodList component            
-            navigation.goBack();
-        } catch (error) {
-            // setGlobalState({...globalstate, errorMessage:'Unable to save data'})
-        }
+  const addFoodsBtn = async () => {
+    try {
+      const res = await addFood("rahel@gggg", { name, origin, price, quantity, date, image });
+          const setNotes = route.params;
+  // setNotes(res.data);
+  //     navigate.goBack();
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    // Function to format the current date as "mm-dd-yyyy"
-    const getCurrentDate = () => {
-      const today = new Date();
-      const dd = String(today.getDate()).padStart(2, '0');
-      const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-      const yyyy = today.getFullYear();
-      return `${mm}-${dd}-${yyyy}`;
-    };
-  
-    return (
-        <View style={styles.root}>
-            <Text style={styles.title}>Add New Food</Text>
-            {/* <Text style={styles.errorMsg}>{globalstate.errorMessage} </Text> */}
-            <TextInput
-                style={styles.input}
-                placeholder="name"
-                value={state.name}
-                onChangeText={(text) => setState({ ...state, name: text })}
-            ></TextInput>
+  return (
+    <View style={styles.container}>
+      <Text>Add Food</Text>
+      <TextInput placeholder="name" value={name} style={styles.input} onChangeText={(text) => setName(text)} />
+      <TextInput placeholder="origin" value={origin} style={styles.input} onChangeText={(text) => setOrigin(text)} />
+      <TextInput placeholder="price" value={price} style={styles.input} onChangeText={(text) => setPrice(text)} />
+      <TextInput placeholder="quantity" value={quantity} style={styles.input} onChangeText={(text) => setQuantity(text)} />
+      <TextInput placeholder="Date" value={date} style={styles.input} editable={false} />
+      <TextInput placeholder="image" value={image} style={styles.input} onChangeText={(text) => setImage(text)} />
 
-<TextInput
-                style={styles.input}
-                placeholder="origin"
-                value={state.origin}
-                onChangeText={(text) => setState({ ...state, origin: text })}
-            ></TextInput>
-            
-            <TextInput
-                style={styles.input}
-                placeholder="price"
-                value={state.price}
-                keyboardType='numeric'
-                onChangeText={(text) => setState({ ...state, price: text })}
-            ></TextInput>
-                      <TextInput
-                style={styles.input}
-                placeholder="quantity"
-                value={state.quantity}
-                keyboardType="numeric"
-                onChangeText={(text) => setState({ ...state, quantity: text })}
-            ></TextInput>
-{/* 
-            <TextInput
-                style={styles.input}
-                placeholder="mm-dd-yyyy"
-                keyboardType="numeric"
-                value={state.date}
-                onChangeText={(text) => setState({ ...state, date: text })}
-            > </TextInput> */}
-            <TextInput
-        style={styles.input}
-        placeholder={getCurrentDate()} // Set the current date as the placeholder
-        keyboardType="numeric"
-        value={state.date}
-        onChangeText={(text) => setState({ ...state, date: text })}
-      ></TextInput>
-
-            <TextInput
-                style={styles.input}
-                placeholder="image"
-                value={state.image}
-                onChangeText={(text) => setState({ ...state, image: text })}
-            ></TextInput>
-            <Pressable style={styles.submitButton} >
-                <Text style={styles.submitButtonText} onPress={handleSave} >Save</Text>
-            </Pressable>
-
+      <TouchableHighlight onPress={addFoodsBtn}>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>Save</Text>
         </View>
-    )
-}
+      </TouchableHighlight>
+    </View>
+  )
+};
 
-// import React, { useState, useContext, useEffect } from 'react';
-// import { Alert, Text, Pressable, TextInput, View, FlatList } from 'react-native';
-// import styles from '../../styles/myStyles';
-// import { addFood, getFoodList } from '../../utils/network'; // Assuming you have a getFoods function to fetch saved foods
-// import GlobalContext from '../../utils/context';
-// import { useNavigation } from '@react-navigation/native';
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 20,
+  },
+  input: {
+    padding: 10,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 3,
+  },
+  submitButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#0066cc',
+    borderRadius: 4,
+    marginVertical: 10,
+    marginHorizontal: 20,
+  },
+  submitButtonText: {
+    fontSize: 18,
+    color: '#ffffff',
+    textAlign: 'center',
+  },
+  button: {
+    borderWidth: 1,
+    borderColor: '#0066cc',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    backgroundColor: '#fff',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#0066CC',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+});
 
-// export default function AddFood() {
-//   const navigation = useNavigation();
-//   const [state, setState] = useState({
-//     name: '',
-//     origin: '',
-//     price: '',
-//     quantity: '',
-//     date: '',
-//     image: '',
-//   });
-
-// //   const [datestate, setDatestate] = useState({ date: '' });
-
-// // // Function to format the current date as "mm-dd-yyyy"
-// // const getCurrentDate = () => {
-// //   const today = new Date();
-// //   const dd = String(today.getDate()).padStart(2, '0');
-// //   const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-// //   const yyyy = today.getFullYear();
-// //   return `${mm}-${dd}-${yyyy}`;
-// // };
-
-//   const [savedFoods, setSavedFoods] = useState([]); // State to hold the list of saved foods
-
-//   //const navigation = useNavigation();
-//   const { onRefresh } = navigation.params;
-  
-
-//   const handleSave = async () => {
-//     try {
-//       // Validate input variables (your existing validation code)
-
-//       const ret = await addFood(state);
-//       onRefresh();
-//       setSavedFoods((prevFoods) => [...prevFoods, ret]); // Add the saved food to the list
-
-//       navigation.goBack();
-//     } catch (error) {
-//       // Handle error
-//     }
-//   };
-
-//   useEffect(() => {
-//     // Fetch the list of saved foods when the component mounts
-//     getFoodList()
-//       .then((foods) => {
-//         setSavedFoods(foods);
-//       })
-//       .catch((error) => {
-//         // Handle error
-//       });
-//   }, []);
-
-//   return (
-//     <View style={styles.root}>
-//       <Text style={styles.title}>Add New Food</Text>
-//       <TextInput
-//         style={styles.input}
-//         placeholder="name"
-//         value={state.name}
-//         onChangeText={(text) => setState({ ...state, name: text })}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="origin"
-//         value={state.origin}
-//         onChangeText={(text) => setState({ ...state, origin: text })}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="price"
-//         value={state.price}
-//         keyboardType="numeric"
-//         onChangeText={(text) => setState({ ...state, price: text })}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="quantity"
-//         value={state.quantity}
-//         keyboardType="numeric"
-//         onChangeText={(text) => setState({ ...state, quantity: text })}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder={getCurrentDate()}
-//         keyboardType="numeric"
-//         value={state.date}
-//         onChangeText={(text) => setState({ ...state, date: text })}
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="image"
-//         value={state.image}
-//         onChangeText={(text) => setState({ ...state, image: text })}
-//       />
-//       <Pressable style={styles.submitButton}>
-//         <Text style={styles.submitButtonText} onPress={handleSave}>
-//           Save
-//         </Text>
-//       </Pressable>
-
-//       {/* Display the list of saved foods */}
-//       <FlatList
-//         data={savedFoods}
-//         keyExtractor={(item) => item.id.toString()} // Assuming each food item has an 'id' property
-//         renderItem={({ item }) => (
-//           <Text>
-//             Name: {item.name}, Origin: {item.origin}, Price: {item.price}
-//           </Text>
-//         )}
-//       />
-//     </View>
-//   );
-// }
-
+export default AddFood;

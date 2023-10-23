@@ -14,11 +14,11 @@ export default function FoodList() {
     const onRefresh = () => {
         setRefresh(!refresh)
     }
-
+const userEmail= "rahel@gggg";
     useEffect(() => {
         try {
             async function getData() {
-                const ret = await getFoodList();
+                const ret = await getFoodList(userEmail);
                 if (ret && ret.success) {
                     setFood(ret.data);
                 }
@@ -70,5 +70,3 @@ export default function FoodList() {
 
     )
 }
-
-

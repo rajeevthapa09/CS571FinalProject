@@ -151,14 +151,6 @@ function getCurrentDate() {
   return `${mm}-${dd}-${yyyy}`;
 }
 
-let foods = [
-    { name: 'Noodle', origin: 'Vietnam', price: 8.99, quantity: 2, date: getCurrentDate(), image: 'https://picsum.photos/200' },
-    { name: 'LoMein', origin: 'Nepal', price: 6.99,quantity: 4, date: getCurrentDate(), image: 'https://picsum.photos/200' },
-    { name: 'Paneer', origin: 'USA', price: 4.99, quantity: 4,date: getCurrentDate(), image: 'https://picsum.photos/200' },
-    { name: 'Tikka', origin: 'Mongolia', price: 3.99, quantity: 4,date: getCurrentDate(), image: 'https://picsum.photos/200' },
-    { name: 'Injera', origin: 'Ethiopia', price: 4.99,quantity: 4, date: getCurrentDate(), image: 'https://picsum.photos/200' }
-]
-
 
 export async function getFoodList(userEmail) {
   try {
@@ -233,12 +225,8 @@ export async function addFood(userEmail, food) {
       body: JSON.stringify(food) // Send the 'food' object in the request body
     });
 
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(`Failed to add food: ${errorResponse.error}`);
-    }
-
-    return { success: true };
+    const json = await response.json();
+    return  json;
   } catch (error) {
     return { success: false, error: error.message };
   }

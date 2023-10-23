@@ -1,78 +1,60 @@
-import { Text, Pressable, TextInput, View } from "react-native"
-import React, { useState } from "react";
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { editFood } from "../../utils/network";
-import styles from '../../styles/myStyles';
+import { Text, View, TextInput, StyleSheet, TouchableHighlight } from "react-native"
+import { useState } from "react";
+import { editFood} from "../../utils/network";
+import { useNavigation } from '@react-navigation/native';
 
-export default function EditFood() {
-    const navigation = useNavigation();
-    const route = useRoute();
-    const { food, onRefresh } = route.params;
-
-    const [state, setState] = useState(
-        {
-            _id: food._id,
-            name: food.name,
-            price: food.price,
-            origin: food.origin,
-            date: food.date,
-            image: food.image
-        })
-
-    const handleSubmit = async () => {
+export default function EditFood({ route }) {
+    console.log(route.params)
+    const [foods, setFoods] = useState({ name: route.params.food.name, origin: route.params.food.origin, price: route.params.food.price, quantity: route.params.food.quantity, date: route.params.food.date, image: route.params.food.image });
+    const navigate = useNavigation();
+    const submitEdit = async () => {
         try {
-            await editFood(state);
-            onRefresh();
-            navigation.goBack()
+            const res = await editFood("rahel@gggg.com", route.params.food._id.toString(), foods);
+            const setFoods = route.params.setFoods;
+            setFoods(res.data);
+            navigate.goBack();
         } catch (error) {
-
+            console.log(error);
         }
+
     }
     return (
-        <View style={styles.root}>
-            <Text style={styles.title}>Edit Course</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="name"
-                value={state.name}
-                onChangeText={(text) => setState({ ...state, name: text })}
-            ></TextInput>
-            <TextInput
-                style={styles.input}
-                placeholder="price"
-                keyboardType="numeric"
-                value={state.price}
-                onChangeText={(text) => setState({ ...state, price: text })}
-            ></TextInput>
-            <TextInput
-                style={styles.input}
-                placeholder="origin"
-                value={state.origin}
-                onChangeText={(text) => setState({ ...state, origin: text })}
-            ></TextInput>
-                        <TextInput
-                style={styles.input}
-                placeholder="quantity"
-                keyboardType="numeric"
-                value={state.price}
-                onChangeText={(text) => setState({ ...state, price: text })}
-            ></TextInput>
-            <TextInput
-                style={styles.input}
-                placeholder="yyyy-mm-dd"
-                keyboardType="numeric"
-                value={state.date}
-                onChangeText={(text) => setState({ ...state, date: text })}
-            ></TextInput>
-            <TextInput
-                style={styles.input}
-                placeholder="Image"
-                value={state.image}
-                onChangeText={(text) => setState({ ...state, image: text })}
-            ></TextInput>
-            <Pressable style={styles.submitButton} >
-                <Text style={styles.submitButtonText} onPress={handleSubmit} >Save</Text>
-            </Pressable>
+        <View>
+            <Text>Name: </Text><TextInput style={styles.input} value={foods.name} onChangeText={(text) => setNotes({ ...notes, title: text })} />
+            <Text>Origin: </Text><TextInput style={styles.input} value={foods.origin} onChangeText={(text) => setNotes({ ...notes, title: text })} />
+            <Text>Price: </Text><TextInput style={styles.input} value={foods.price} onChangeText={(text) => setNotes({ ...notes, title: text })} />
+            <Text>Quantity: </Text><TextInput style={styles.input} value={foods.quantity} onChangeText={(text) => setNotes({ ...notes, title: text })} />
+<Text>Date:</Text><TextInput style={styles.input} value={foods.date} editable="false" />
+<Text>Image: </Text><TextInput style={styles.input} value={foods.image} onChangeText={(text) => setNotes({ ...notes, title: text })} />
+
+            <TouchableHighlight onPress={submitEdit} style={styles.submitButton}>
+                <Text style={styles.submitButtonText}>Save</Text>
+            </TouchableHighlight>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    input: {
+        padding: 10,
+        marginVertical: 10,
+        marginHorizontal: 20,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 3,
+        backgroundColor: "white"
+    },
+    submitButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#0066cc',
+        borderRadius: 4,
+        marginVertical: 10,
+        marginHorizontal: 20,
+    },
+    submitButtonText: {
+        fontSize: 18,
+        color: '#ffffff',
+        textAlign: 'center',
+    }
+})

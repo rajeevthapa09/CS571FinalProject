@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
 import { useNavigation } from '@react-navigation/native';
 import { getNotes } from "../../utils/network";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import GlobalContext from "../../utils/context";
+import styles from "../../styles/myStyles";
 
 export default function Notes() {
+    const {state, setState} = useContext(GlobalContext)
 
     const [notes, setNotes] = useState([]);
 
@@ -15,7 +18,7 @@ export default function Notes() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await getNotes("test@test.com");
+                const res = await getNotes(state.userInfo.email, state.token);
                 setNotes((prev) => res.data);
             } catch (error) {
                 console.log(error);
@@ -25,8 +28,8 @@ export default function Notes() {
 
     return (
         <View>
-            <TouchableHighlight style={styles.button} onPress={addNote}>
-                <Text style={styles.buttonText}>Add Note</Text>
+            <TouchableHighlight style={[styles.buttonNotes, {width: 100, marginLeft: 250}]} onPress={addNote}>
+                <Text style={styles.buttonTextNotes}>Add Note</Text>
             </TouchableHighlight>
             <View style={styles.notes}>
                 <View style={{ flex: 1.5 }}><Text>Notes</Text></View>
@@ -79,46 +82,46 @@ function Display({ note, setNotes }) {
     )
 }
 
-const styles = StyleSheet.create({
-    notes: {
-        flex: 1,
-        flexDirection: "row",
-        padding: 10
-    },
-    button: {
-        borderWidth: 1,
-        borderColor: '#0066cc',
-        borderRadius: 14,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        backgroundColor: '#fff',
-        marginTop: 10,
-        width: 90,
-        marginLeft: "75%"
-    },
-    buttonText: {
-        color: '#0066CC',
-        fontSize: 12,
-        textAlign: 'center',
-    },
-    edges: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 5,
-        minWidth: 50,
-    },
-    button: {
-        borderWidth: 1,
-        borderColor: '#0066CC',
-        borderRadius: 14,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        backgroundColor: '#fff',
-    },
-    buttonText: {
-        color: '#0066CC',
-        fontSize: 12,
-        textAlign: 'center',
-    },
-})
+// const styles = StyleSheet.create({
+//     notes: {
+//         flex: 1,
+//         flexDirection: "row",
+//         padding: 10
+//     },
+//     button: {
+//         borderWidth: 1,
+//         borderColor: '#0066cc',
+//         borderRadius: 14,
+//         paddingHorizontal: 10,
+//         paddingVertical: 3,
+//         backgroundColor: '#fff',
+//         marginTop: 10,
+//         width: 90,
+//         marginLeft: "75%"
+//     },
+//     buttonText: {
+//         color: '#0066CC',
+//         fontSize: 12,
+//         textAlign: 'center',
+//     },
+//     edges: {
+//         flex: 1,
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         padding: 5,
+//         minWidth: 50,
+//     },
+//     button: {
+//         borderWidth: 1,
+//         borderColor: '#0066CC',
+//         borderRadius: 14,
+//         paddingHorizontal: 10,
+//         paddingVertical: 3,
+//         backgroundColor: '#fff',
+//     },
+//     buttonText: {
+//         color: '#0066CC',
+//         fontSize: 12,
+//         textAlign: 'center',
+//     },
+// })

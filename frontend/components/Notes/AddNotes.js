@@ -17,7 +17,7 @@ const AddCourse = ({ route }) => {
 
   const addNotesBtn = async () => {
     try {
-      const res = await addNotes("test@test.com", { title, comment, date });
+      const res = await addNotes(state.userInfo.email, { title, comment, date }, state.token);
       const setNotes = route.params;
       setNotes(res.data);
       navigate.goBack();

@@ -66,7 +66,7 @@ export async function updateProfiles(token, myfile) {
     console.log(token, "token");
     console.log("myfile", myfile);
     const result = await fetch("http://127.0.0.1:5001/updateUser", {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -89,12 +89,14 @@ export async function updateProfiles(token, myfile) {
 }
 
 //Rajeev Code
-export async function getNotes(emailID) {
+export async function getNotes(emailID,token) {
   try {
     const response = await fetch(`http://localhost:5001/notes/${emailID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     const result = await response.json();
@@ -104,13 +106,15 @@ export async function getNotes(emailID) {
   }
 }
 
-export async function addNotes(emailID, data) {
+export async function addNotes(emailID, data, token) {
   try {
     const response = await fetch(`http://localhost:5001/notes/${emailID}`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     const result = await response.json();
@@ -120,7 +124,7 @@ export async function addNotes(emailID, data) {
   }
 }
 
-export async function editNotes(emailID, noteID, data) {
+export async function editNotes(emailID, noteID, data, token) {
   try {
     const response = await fetch(
       `http://localhost:5001/notes/${emailID}/note/${noteID}`,
@@ -129,6 +133,8 @@ export async function editNotes(emailID, noteID, data) {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );

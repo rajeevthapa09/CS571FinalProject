@@ -101,7 +101,8 @@ export default function SignUp() {
         style={styles.input}
         value={signup.address}
         onChangeText={(text) => setSignup({ ...signup, address: text })}
-        maxLength={10}
+        multiline={true}
+        numberOfLines={4}
         placeholder="address"
       />
 

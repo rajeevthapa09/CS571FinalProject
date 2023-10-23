@@ -1,20 +1,19 @@
-const { MongoClient, ObjectId } = require('mongodb');
+const { MongoClient, ObjectId } = require("mongodb");
 const express = require("express");
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
 const bycrpt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const PRIVATE_KEY = "team1";
 let db = null;
 let COLLECTION_NAME = "restaurants";
 
-
 async function connectDB() {
   try {
     const client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
     db = client.db("RestaurantManagement");
-    console.log('DB connected');
+    console.log("DB connected");
   } catch (err) {
     console.log(err);
   }
@@ -26,45 +25,65 @@ app.use(cors());
 
 connectDB();
 
-
-
 //----------------------------------------------
 // Start of Rajeev Api for Notes
 //---------------------------------------------
 
 // Add Notes
-app.put('/notes/:userEmail', async (req, res) => {
+app.put("/notes/:userEmail", async (req, res) => {
   try {
     req.body._id = new ObjectId();
-    const ret = await db.collection(COLLECTION_NAME).updateOne({ email: req.params.userEmail }, { $push: { notes: req.body } });
-    const getData = await db.collection(COLLECTION_NAME).findOne({ email: req.params.userEmail });
+    const ret = await db
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        { email: req.params.userEmail },
+        { $push: { notes: req.body } }
+      );
+    const getData = await db
+      .collection(COLLECTION_NAME)
+      .findOne({ email: req.params.userEmail });
     res.status(200).send({ success: true, data: getData.notes });
   } catch (err) {
-    res.status(500).send({ success: false, err: "DB error" })
+    res.status(500).send({ success: false, err: "DB error" });
   }
-})
+});
 
 // Get Notes
-app.get('/notes/:userEmail', async (req, res) => {
+app.get("/notes/:userEmail", async (req, res) => {
   try {
-    const ret = await db.collection(COLLECTION_NAME).findOne({ email: req.params.userEmail });
+    const ret = await db
+      .collection(COLLECTION_NAME)
+      .findOne({ email: req.params.userEmail });
     res.status(200).send({ success: true, data: ret.notes });
   } catch (err) {
-    res.status(500).send({ success: false, err: "DB error" })
+    res.status(500).send({ success: false, err: "DB error" });
   }
-})
+});
 
 // Edit Notes
-app.patch('/notes/:userEmail/note/:noteID', async (req, res) => {
+app.patch("/notes/:userEmail/note/:noteID", async (req, res) => {
   try {
     console.log("req.body.title", req.body);
-    const ret = await db.collection(COLLECTION_NAME).updateOne({ email: req.params.userEmail, "notes._id": new ObjectId(req.params.noteID) }, { $set: { "notes.$.title": req.body.title, "notes.$.comment": req.body.comment } });
-    const getData = await db.collection(COLLECTION_NAME).findOne({ email: req.params.userEmail });
+    const ret = await db.collection(COLLECTION_NAME).updateOne(
+      {
+        email: req.params.userEmail,
+        "notes._id": new ObjectId(req.params.noteID),
+      },
+      {
+        $set: {
+          "notes.$.title": req.body.title,
+          "notes.$.comment": req.body.comment,
+        },
+      }
+    );
+    const getData = await db
+      .collection(COLLECTION_NAME)
+      .findOne({ email: req.params.userEmail });
     res.status(200).send({ success: true, data: getData.notes });
   } catch (err) {
-    res.status(500).send({ success: false, err: "DB error" })
+    res.status(500).send({ success: false, err: "DB error" });
   }
-})
+});
 //---------------------------------
 // End of Rajeev api for Notes
 //------------------------------------
@@ -125,7 +144,7 @@ app.patch("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
           "foods.$.price": price,
           "foods.$.quantity": quantity,
           "foods.$.date": date,
-        }
+        },
       }
     );
     res.status(200).send({ success: true, data: result });
@@ -138,7 +157,7 @@ app.delete("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
   try {
     const result = await collection.updateOne(
       {
-        _id: new ObjectId(req.params.restaurantId)
+        _id: new ObjectId(req.params.restaurantId),
       },
       { $pull: { foods: { _id: new ObjectId(req.params.foodId) } } }
     );
@@ -155,7 +174,9 @@ app.get("/restaurants/:restaurantId/foods", async (req, res) => {
     const user = await collection.findOne({ _id: new ObjectId(restaurantId) });
 
     if (!user) {
-      return res.status(404).json({ success: false, error: "restaurant not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "restaurant not found" });
     }
 
     const foods = user.foods || [];
@@ -169,11 +190,9 @@ app.get("/restaurants/:restaurantId/foods", async (req, res) => {
 // end of Rahel api for Foods
 //-------------------------------------------------------------------------------
 
-
 //----------------------------------------------------------------------------
 // start of Wengel api for Login/Signup/Auth
 //-------------------------------------------------------------------------------
-
 
 app.post("/signup", async (req, res) => {
   try {
@@ -181,7 +200,7 @@ app.post("/signup", async (req, res) => {
 
     const newUser = await db
       .collection(COLLECTION_NAME)
-      .find({ email: body?.email })
+      .find({ email: body.email })
       .toArray();
     if (newUser.length > 0) {
       return res
@@ -189,11 +208,11 @@ app.post("/signup", async (req, res) => {
         .send({ success: false, error: "please use another email" });
     }
 
-    const encrted = await bycrpt.hash(body?.password, 10);
+    const encrted = await bycrpt.hash(body.password, 10);
 
     const result = await db
       .collection(COLLECTION_NAME)
-      .insertOne({ ...body, password: encrted, foods:[], notes:[] });
+      .insertOne({ ...body, password: encrted, foods: [], notes: [] });
 
     res.send({ success: true, data: result });
   } catch (error) {
@@ -207,15 +226,15 @@ app.post("/SignIn", async (req, res) => {
 
     const currentOwner = await db
       .collection(COLLECTION_NAME)
-      .findOne({ email: body?.email });
+      .findOne({ email: body.email });
     if (currentOwner) {
       const correctPassword = await bycrpt.compare(
-        body?.password,
-        currentOwner?.password
+        body.password,
+        currentOwner.password
       );
       if (correctPassword) {
         const token = jwt.sign(
-          { ownerID: currentOwner._id, email: currentOwner?.email },
+          { ownerID: currentOwner._id, email: currentOwner.email },
           PRIVATE_KEY
         );
 
@@ -232,9 +251,6 @@ app.post("/SignIn", async (req, res) => {
 });
 
 function auth(req, res, next) {
-  //   if (!req.headers.authorization) {
-  //     res.send({ success: false, error: "Please provide Authorization" });
-  //   }
   const token = req.headers["authorization"]?.split(" ")[1];
   const key = PRIVATE_KEY;
 
@@ -253,7 +269,7 @@ function auth(req, res, next) {
 }
 app.use(auth);
 
-app.get("/users/me", async (req, res) => {
+app.get("/profileData/user", async (req, res) => {
   const { ownerID } = req.currentuser;
 
   try {
@@ -265,10 +281,10 @@ app.get("/users/me", async (req, res) => {
       return res.status(200).send({
         success: true,
         data: {
-          name: user?.name,
-          phone: user?.phone,
-          email: user?.email,
-          address: user?.address,
+          name: user.name,
+          phone: user.phone,
+          email: user.email,
+          address: user.address,
         },
       });
     } else {
@@ -280,7 +296,7 @@ app.get("/users/me", async (req, res) => {
   }
 });
 
-app.post("/test", async (req, res) => {
+app.post("/updateUser", async (req, res) => {
   const { ownerID } = req.currentuser;
   console.log("onwer", ownerID);
   try {
@@ -295,12 +311,9 @@ app.post("/test", async (req, res) => {
       .updateOne({ _id: new ObjectId(ownerID) }, { $set: updatedData });
     console.log(req.body);
     if (result.modifiedCount === 1) {
-      //   const updatedUserData = await db
-      //     .collection(COLLECTION_NAME)
-      //     .findOne({ _id: new ObjectId(ownerID) });
       return res.status(200).send({
         success: true,
-        data: "test",
+        data: result,
       });
     } else {
       return res.status(404).send({
@@ -322,4 +335,4 @@ app.post("/test", async (req, res) => {
 //---------------------------
 
 const PORT = 5001;
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

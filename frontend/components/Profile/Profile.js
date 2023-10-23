@@ -74,21 +74,13 @@ export default function Profile() {
         maxLength={10}
         placeholder="email"
       />
-      {/* <TextInput
-        style={styles.input}
-        value={updateFile.password}
-        onChangeText={(text) =>
-          setUpdateFile({ ...updateFile, password: text })
-        }
-        maxLength={10}
-        placeholder="password"
-        secureTextEntry={true}
-      /> */}
+
       <TextInput
         style={styles.input}
         value={updateFile.address}
         onChangeText={(text) => setUpdateFile({ ...updateFile, address: text })}
-        maxLength={10}
+        multiline={true}
+        numberOfLines={4}
         placeholder="address"
       />
 

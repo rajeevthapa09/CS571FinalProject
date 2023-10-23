@@ -13,7 +13,7 @@ import { updateProfiles } from "../../utils/network";
 export default function UpdateProfile({ route }) {
   const [name, setName] = useState(route.params.updateFile.name);
   const [phone, setPhone] = useState(route.params.updateFile.phone);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(route.params.updateFile.password);
   const [address, setAddress] = useState(route.params.updateFile.address);
   const { state, setState } = useContext(GlobalContext);
   const updateData = {
@@ -24,20 +24,37 @@ export default function UpdateProfile({ route }) {
   };
 
   const navigation = useNavigation();
-
   const updatebtn = async () => {
     try {
       const res = await updateProfiles(state.token, updateData);
+      console.log(updateData);
       console.log(res);
+
       if (res && res.success) {
         const updatted = res.data;
+        if (updateData.password !== "") {
+          updatted.password = updateData.password;
+        }
         setState({ ...state, profile: updatted });
-        navigation.goBack();
+        if (updateData.password > 0) {
+          navigation.goBack();
+        }
       } else {
-        alert("failed to update");
+        alert("enter password");
       }
     } catch (error) {
       alert("error");
+    }
+  };
+
+  const goBacktoProfile = () => {
+    if (
+      name === updateData.name &&
+      phone === updateData.phone &&
+      password === updateData.password &&
+      address === updateData.address
+    ) {
+      navigation.goBack();
     }
   };
 
@@ -69,12 +86,16 @@ export default function UpdateProfile({ route }) {
         style={styles.input}
         value={address}
         onChangeText={(text) => setAddress(text)}
-        maxLength={10}
+        multiline={true}
+        numberOfLines={4}
         placeholder="address"
       />
 
       <TouchableHighlight style={styles.button} onPress={updatebtn}>
         <Text style={styles.buttonText}>Update</Text>
+      </TouchableHighlight>
+      <TouchableHighlight style={styles.button} onPress={goBacktoProfile}>
+        <Text style={styles.buttonText}>return to profile</Text>
       </TouchableHighlight>
     </View>
   );

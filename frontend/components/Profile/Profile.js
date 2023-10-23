@@ -37,7 +37,7 @@ export default function Profile() {
       }
     }
     getData();
-  }, []);
+  }, [updateFile]);
   console.log(state);
   console.log(updateFile);
 

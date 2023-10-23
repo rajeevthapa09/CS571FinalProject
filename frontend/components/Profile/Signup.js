@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -6,10 +7,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useContext, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { mysignup } from "../../utils/network";
 import GlobalContext from "../../utils/context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function SignUp() {
   const [signup, setSignup] = useState({
     name: "",
@@ -20,6 +21,7 @@ export default function SignUp() {
   });
   const { state, setState } = useContext(GlobalContext);
   const navigation = useNavigation();
+  
   const handlegoback = () => {
     navigation.navigate("login");
   };

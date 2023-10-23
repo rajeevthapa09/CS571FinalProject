@@ -7,10 +7,9 @@ import {
   TouchableHighlight,
   StyleSheet,
 } from "react-native";
-import Layout from "./Layout";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import GlobalContext from "../../utils/context";
 import { myLogin } from "../../utils/network";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const [login, setLogin] = useState({ email: "", password: "" });
@@ -23,8 +22,6 @@ export default function Login() {
       const ret = await myLogin(login.email, login.password);
       if (ret && ret.success) {
         setState({ ...state, token: ret.data });
-        console.log(state);
-
         await AsyncStorage.setItem("token", ret.data);
       } else {
         alert("sign in again");

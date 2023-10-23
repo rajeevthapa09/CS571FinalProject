@@ -1,3 +1,4 @@
+const baseURL = "http://127.0.0.1:5001";
 
 //Wengel Code
 import { useState } from "react";
@@ -6,7 +7,7 @@ export default {};
 
 export async function mysignup(name, phone, email, password, address) {
   try {
-    const uri = "http://127.0.0.1:5001/signup";
+    const uri = "baseURL/signup";
     const requestBody = {
       name,
       phone,
@@ -33,7 +34,7 @@ export async function mysignup(name, phone, email, password, address) {
 }
 export async function myLogin(email, password) {
   try {
-    const uri = "http://127.0.0.1:5001/SignIn";
+    const uri = "baseURL/SignIn";
     const result = await fetch(uri, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -49,7 +50,7 @@ export async function myLogin(email, password) {
 
 export async function getProfile(token) {
   try {
-    const uri = "http://127.0.0.1:5001/users/me";
+    const uri = "baseURL/users/me";
 
     const result = await fetch(uri, {
       method: "GET",
@@ -68,7 +69,7 @@ export async function updateProfiles(token, myfile) {
     // const uri = ;
     console.log(token, "token");
     console.log("myfile", myfile);
-    const result = await fetch("http://127.0.0.1:5001/test", {
+    const result = await fetch("baseURL/test", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +96,7 @@ export async function updateProfiles(token, myfile) {
 //Rajeev Code
 export async function getNotes(emailID) {
     try {
-        const response = await fetch(`http://localhost:5001/notes/${emailID}`, {
+        const response = await fetch(`baseURL/notes/${emailID}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -110,7 +111,7 @@ export async function getNotes(emailID) {
 
 export async function addNotes(emailID, data) {
     try {
-        const response = await fetch(`http://localhost:5001/notes/${emailID}`, {
+        const response = await fetch(`baseURL/notes/${emailID}`, {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {
@@ -126,7 +127,7 @@ export async function addNotes(emailID, data) {
 
 export async function editNotes(emailID, noteID, data) {
     try {
-        const response = await fetch(`http://localhost:5001/notes/${emailID}/note/${noteID}`, {
+        const response = await fetch(`baseURL/${emailID}/note/${noteID}`, {
             method: 'PATCH',
             body: JSON.stringify(data),
             headers: {
@@ -152,76 +153,66 @@ function getCurrentDate() {
 }
 
 
-export async function getFoodList(emailID) {
+
+export async function getFoodList(userEmail) {
   try {
-      const response = await fetch(`http://localhost:5001/foods/${emailID}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      });
-      const result = await response.json();
-      return result;
+    const response = await fetch(`baseURL/users/${userEmail}/foods`);
+    const foods = await response.json();
+    return foods;
   } catch (error) {
-      return null;
+    throw error;
   }
 }
 
-
-export async function addFood(emailID, data) {
+export async function addFood(userEmail, food) {
   try {
-      const response = await fetch(`http://localhost:5001/foods/${emailID}`, {
-          method: 'PUT',
-          body: JSON.stringify(data),
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      });
-      const result = await response.json();
-      return result;
-  } catch (error) {
-      return null;
-  }
-}
-
-export async function deleteFood(userEmail, foodID) {
-  try {
-    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods/${foodID}`, {
-      method: "DELETE",
+    const response = await fetch(`${baseURL}/users/${userEmail}/foods`, {
+      method: "POST",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(food),
     });
 
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(`Failed to delete food: ${errorResponse.error}`);
-    }
-
-    return { success: true };
+    const json = await response.json();
+    return json;
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
-
-
-
-export async function editFood(emailID, foodID, data) {
+export async function deleteFood(userEmail, foodID) {
   try {
-      const response = await fetch(`http://localhost:5001/users/${emailID}/foods/${foodID}`, {
-          method: 'PATCH',
-          body: JSON.stringify(data),
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      });
-      const result = await response.json();
-      return result;
+    const response = await fetch(
+      `${baseURL}/users/${userEmail}/foods/${foodID}`,
+      {
+        method: "DELETE",
+      }
+    );
+    const json = await response.json();
+    return json;
   } catch (error) {
-      return null;
+    throw error;
   }
 }
 
+export async function editFood(userEmail, updatedFoodData) {
+  try {
+    const response = await fetch(
+      `${baseURL}/users/${userEmail}/foods/${updatedFoodData._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedFoodData),
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 
 

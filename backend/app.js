@@ -91,15 +91,17 @@ app.put('/users/:userEmail/foods', async (req, res) => {
 
 //get all foods of a specific restaurant
 
-app.get('/users/:userEmail/foods', async (req, res) => {
+app.get("/users/:userEmail/foods", async (req, res) => {
   try {
-    const ret = await db.collection(COLLECTION_NAME).findOne({ email: req.params.userEmail });
-    const food = ret.foods;
-    res.status(200).send({ success: true, data: ret.food });
+    const ret = await db
+      .collection(COLLECTION_NAME)
+      .findOne({ email: req.params.userEmail });
+
+    res.status(200).send({ success: true, data: ret.foods });
   } catch (err) {
-    res.status(500).send({ success: false, err: "DB error" })
+    res.status(500).send({ success: false, err: "DB error" });
   }
-})
+});
 
 //delete food for a restaurant
 app.delete('/users/:userEmail/foods/:foodID', async (req, res) => {

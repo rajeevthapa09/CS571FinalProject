@@ -1,14 +1,12 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Layout from "./Layout";
 import Home from "./Home";
 import GlobalContext from "../../utils/context";
-import { useContext, useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LayoutorHome() {
-  const [state, setState] = useState({ token: null, profile: [] });
+  const [state, setState] = useState({ token: null, profile: [], foods: [] });
+
   useEffect(() => {
     const getToken = async () => {
       try {
@@ -21,6 +19,7 @@ export default function LayoutorHome() {
 
     getToken();
   }, []);
+
   return (
     <GlobalContext.Provider value={{ state, setState }}>
       {state.token ? <Home /> : <Layout />}

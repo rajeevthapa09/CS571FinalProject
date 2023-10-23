@@ -1,24 +1,21 @@
-import { Text } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./Login";
 import SignUp from "./Signup";
 import Home from "./Home";
-import { createStackNavigator } from "@react-navigation/stack";
-
-import { useContext } from "react";
-import GlobalContext from "../../utils/context";
 
 const Stack = createStackNavigator();
 
 export default function Layout() {
-  const { state } = useContext(GlobalContext);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="login"
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen
         name="login"
         component={Login}
         options={{
           title: "login",
-          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -26,7 +23,6 @@ export default function Layout() {
         component={SignUp}
         options={{
           title: "sign-up",
-          headerShown: false,
         }}
       />
 
@@ -35,7 +31,6 @@ export default function Layout() {
         component={Home}
         options={{
           title: "home",
-          headerShown: false,
         }}
       />
     </Stack.Navigator>

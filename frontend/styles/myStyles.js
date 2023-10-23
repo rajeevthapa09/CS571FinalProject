@@ -1,6 +1,12 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
   root: {
     flex: 1,
     backgroundColor: "#008000",
@@ -73,7 +79,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#0066CC',
     borderRadius: 14,
-    width:80,
+    width: 80,
     paddingHorizontal: 10,
     paddingVertical: 3,
     backgroundColor: '#fff',
@@ -98,6 +104,39 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#0066CC',
     fontWeight: '300',
+  },
+  notes: {
+    flex: 1,
+    flexDirection: "row",
+    padding: 10
+  },
+  buttonNotes: {
+    borderWidth: 1,
+    borderColor: '#0066cc',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    backgroundColor: '#fff',
+    marginTop: 10,
+    width: 90,
+    marginLeft: "75%"
+  },
+  buttonTextNotes: {
+    color: '#0066CC',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  edgesNotes: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    minWidth: 50,
+  },
+  buttonTextNotes: {
+    color: '#0066CC',
+    fontSize: 12,
+    textAlign: 'center',
   },
 });
 

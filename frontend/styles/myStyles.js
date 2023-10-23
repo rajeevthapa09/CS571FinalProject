@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   notes: {
-    flex: 1,
+    flex: 0.05,
     flexDirection: "row",
     padding: 10
   },
@@ -137,6 +137,9 @@ const styles = StyleSheet.create({
     color: '#0066CC',
     fontSize: 12,
     textAlign: 'center',
+  },
+  notesHeader: {
+    fontWeight: "bold"
   },
 });
 

@@ -12,15 +12,35 @@ export default function EditNotes({ route }) {
     const navigate = useNavigation();
     const submitEdit = async () => {
         try {
+            console.log("editStates", state);
             const res = await editNotes(state.userInfo.email, route.params.note._id.toString(), notes, state.token);
             const setNotes = route.params.setNotes;
+            console.log("editNotes", res);
             setNotes(res.data);
             navigate.goBack();
         } catch (error) {
             console.log(error);
         }
-
     }
+
+    // useEffect(() => {
+    //     (async () => {
+    //         let currentUser = null
+    //         try {
+    //             try {
+    //                 const savedUser = await AsyncStorage.getItem("userInfo");
+    //                 currentUser = JSON.parse(savedUser);
+    //             } catch (error) {
+    //                 console.log(error);
+    //             }
+    //             const res = await getNotes(currentUser.email, state.token);
+    //             setNotes((prev) => res.data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     })()
+    // }, [])
+
     return (
         <View>
             <Text>Title: </Text><TextInput style={styles.input} value={notes.title} onChangeText={(text) => setNotes({ ...notes, title: text })} />

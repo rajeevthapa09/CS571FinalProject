@@ -25,9 +25,19 @@ export default function Login() {
       if (ret && ret.success) {
         setState({ ...state, token: ret.data.token, userInfo: { name: ret.data.name, phone: ret.data.phone, email: ret.data.email, address: ret.data.address } });
         console.log("userinfo", state, "ret", ret);
-        await AsyncStorage.setItem("token", ret.data);
+        try {
+          await AsyncStorage.setItem("token", ret.data.token);
+        } catch (error) {
+          console.log(error);
+        }
+        try {
+          await AsyncStorage.setItem("userInfo", JSON.stringify({ name: ret.data.name, phone: ret.data.phone, email: ret.data.email, address: ret.data.address }));
+        } catch (error) {
+          console.log(error);
+        }
+
       } else {
-        alert("sign in again");
+        alert("Incorrect Username or Password");
       }
     } catch (error) {
       alert("error");
@@ -54,7 +64,7 @@ export default function Login() {
         placeholder="password"
         secureTextEntry={true}
       />
-      <View style={{flexDirection: "row"}}>
+      <View style={{ flexDirection: "row" }}>
         <TouchableHighlight style={[styles.submitButton, { width: 75, marginHorizontal: 3 }]} onPress={handleLoginButton}>
           <Text style={[styles.submitButtonText, { fontSize: 14 }]}>Login</Text>
         </TouchableHighlight>

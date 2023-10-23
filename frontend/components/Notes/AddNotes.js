@@ -29,7 +29,7 @@ const AddCourse = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text>Add New Note</Text>
-      <TextInput placeholder="Title" value={title} style={styles.input} onChangeText={(text) => setTitle(text)} />
+      <TextInput placeholder="Title" value={title} style={styles.input} onChangeText={(text) => setTitle(text)} maxLength={45} />
       <TextInput placeholder="Comment" value={comment} style={styles.input} multiline numberOfLines={5} onChangeText={(text) => setComment(text)} />
       <TextInput placeholder="Date" value={date} style={styles.input} editable={false} />
 

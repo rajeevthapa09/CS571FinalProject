@@ -13,6 +13,12 @@ const Tab = createBottomTabNavigator();
 export default function Home() {
     return (
         <Tab.Navigator >
+            
+            <Tab.Screen name="notes" component={NavigationNotes} options={{
+                headerShown: false, tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons name="microsoft-onenote" color={color} size={26} />
+                )
+            }} />
             <Tab.Screen
                 name="foods"
                 component={FoodsScreen}
@@ -23,11 +29,6 @@ export default function Home() {
                     ),
                 }}
             />
-            <Tab.Screen name="notes" component={NavigationNotes} options={{
-                headerShown: false, tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="microsoft-onenote" color={color} size={26} />
-                )
-            }} />
             <Tab.Screen
                 name="profile"
                 component={ProfileNavigator}

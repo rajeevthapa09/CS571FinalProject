@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Layout from "./Layout";
 import GlobalContext from "../../utils/context";
@@ -14,6 +14,7 @@ import { getProfile, updateProfiles } from "../../utils/network";
 
 export default function Profile() {
   const { state, setState } = useContext(GlobalContext);
+  const usrPwd = useRef(null);
   const [updateFile, setUpdateFile] = useState({
     name: state.userInfo.name,
     phone: state.userInfo.phone,
@@ -25,27 +26,35 @@ export default function Profile() {
   console.log("updatefile", updateFile);
   const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   async function getData() {
-  //     try {
-  //       const res = await getProfile(state.token);
-  //       if (res && res.success) {
-  //         setState({ ...state, profile: res.data });
-  //         setUpdateFile(res.data);
-  //       }
-  //     } catch (error) {
-  //       alert("error");
-  //     }
-  //   }
-  //   getData();
-  // }, [updateFile]);
+  useEffect(() => {
+    async function getData(){
+      try{
+        const savedUser = await AsyncStorage.getItem("userInfo");
+        const currentUser = JSON.parse(savedUser);
+        console.log("currentUser", currentUser);
+        setUpdateFile({
+          name: currentUser.name,
+          phone: currentUser.phone,
+          email: currentUser.email,
+          password: "",
+          address: currentUser.address,
+        })
+
+      }catch(error){
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
+
   console.log(state);
   console.log(updateFile);
 
   const logoutBtn = async () => {
     await AsyncStorage.removeItem("token");
-    alert("success");
-    setState({ ...state, token: null });
+    await AsyncStorage.removeItem("userInfo");
+    alert("Successfully Logged Out");
+    setState({ ...state, token: null, userInfo: {} });
   };
 
   const updatebtn = () => {
@@ -53,25 +62,17 @@ export default function Profile() {
     (async () => {
       try {
         const res = await updateProfiles(state.token, updateFile);
-        // console.log(updateData);
         console.log(res, "res");
   
         if (res && res.success) {
-          console.log("i am in")
-          // const updatted = res.data;
-          // if (updateData.password !== "") {
-          //   updatted.password = updateData.password;
-          // }
-          const updatted = res.data;
-          if (updateFile.password !== "") {
-            updatted.password = updateFile.password;
+          setState({ ...state, profile: {...updateFile}, userInfo:{...updateFile} });
+          alert("Successfully Updated")
+          try {
+            await AsyncStorage.setItem("userInfo", JSON.stringify({ name: updateFile.name, phone: updateFile.phone, email: updateFile.email, address: updateFile.address }));
+          } catch (error) {
+            console.log(error);
           }
-          setState({ ...state, profile: updatted, userInfo:{...updateFile} });
-        //   if (updateData.password > 0) {
-        //     navigation.goBack();
-        //   }
-        // } else {
-        //   alert("enter password");
+          setUpdateFile({ ...updateFile, password: "" }); 
         }
       } catch (error) {
         // alert("error");
@@ -108,11 +109,13 @@ export default function Profile() {
       <TextInput
         style={styles.input}
         value={updateFile.password}
+        ref={usrPwd}
         onChangeText={(text) =>
           setUpdateFile({ ...updateFile, password: text })
         }
         maxLength={10}
         placeholder="Change Password"
+        secureTextEntry={true}
       />
 
       <TextInput

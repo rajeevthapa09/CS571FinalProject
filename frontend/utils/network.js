@@ -125,6 +125,10 @@ export async function addNotes(emailID, data, token) {
 }
 
 export async function editNotes(emailID, noteID, data, token) {
+  console.log("emailId", emailID);
+  console.log( "noteId", noteID);
+  console.log("data", data);
+  console.log("token", token);
   try {
     const response = await fetch(
       `http://localhost:5001/notes/${emailID}/note/${noteID}`,

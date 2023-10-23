@@ -37,9 +37,7 @@ export default function Profile() {
       }
     }
     getData();
-  }, [updateFile]);
-  console.log(state);
-  console.log(updateFile);
+  }, []);
 
   const logoutBtn = async () => {
     await AsyncStorage.removeItem("token");

@@ -284,6 +284,7 @@ app.get("/profileData/user", async (req, res) => {
           name: user.name,
           phone: user.phone,
           email: user.email,
+
           address: user.address,
         },
       });

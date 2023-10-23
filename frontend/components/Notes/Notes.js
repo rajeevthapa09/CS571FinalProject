@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
+import { View, Text, StyleSheet, TouchableHighlight, FlatList, ScrollView } from "react-native"
 import { useNavigation } from '@react-navigation/native';
 import { getNotes } from "../../utils/network";
 import { useContext, useEffect, useState } from "react";
@@ -35,7 +35,8 @@ export default function Notes() {
     }, [])
 
     return (
-        <View style={{ backgroundColor: "white", flex: 1 }}>
+        <ScrollView showsVerticalScrollIndicator={true} persistentScrollbar={true} style={{ backgroundColor: "white", flex: 1 }}>
+        {/* <View style={{ backgroundColor: "white", flex: 1 }}> */}
             <TouchableHighlight style={[styles.buttonNotes, { width: 80, marginLeft: 269, borderRadius: 5 }]} onPress={addNote}>
                 <Text style={styles.buttonTextNotes}>Add Note</Text>
             </TouchableHighlight>
@@ -55,7 +56,8 @@ export default function Notes() {
                 scrollIndicatorInsets={{ right: 3 }}
             />
 
-        </View>
+        {/* </View> */}
+        </ScrollView>
     )
 }
 

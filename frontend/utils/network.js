@@ -159,12 +159,13 @@ let foods = [
     { name: 'Injera', origin: 'Ethiopia', price: 4.99,quantity: 4, date: getCurrentDate(), image: 'https://picsum.photos/200' }
 ]
 
-export async function getFoodList(userId) {
+
+export async function getFoodList(userEmail) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userId}/foods`, {
+    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods`, {
       method: "GET",
       headers: {
-        "content-type": "application/json"
+        "Content-Type": "application/json"
       }
     });
 
@@ -179,9 +180,10 @@ export async function getFoodList(userId) {
   }
 }
 
-export async function deleteFood(userId, foodId) {
+
+export async function deleteFood(userEmail, foodId) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userId}/foods/${foodId}`, {
+    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods/${foodId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -190,17 +192,19 @@ export async function deleteFood(userId, foodId) {
 
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(`Failed to delete food: ${errorResponse.message}`);
+      throw new Error(`Failed to delete food: ${errorResponse.error}`);
     }
+
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function editFood(userId, foodId, updatedFoodData) {
+
+export async function editFood(userEmail, updatedFoodData) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userId}/foods/${foodId}`, {
+    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -210,17 +214,18 @@ export async function editFood(userId, foodId, updatedFoodData) {
 
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(`Failed to update food: ${errorResponse.message}`);
+      throw new Error(`Failed to update food: ${errorResponse.error}`);
     }
+
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function addFood(food, userId) {
+export async function addFood(userEmail, food) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userId}/foods`, {
+    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods`, {
       method: "POST", // Change the method to POST for creating a new food item
       headers: {
         "Content-Type": "application/json"
@@ -230,7 +235,7 @@ export async function addFood(food, userId) {
 
     if (!response.ok) {
       const errorResponse = await response.json();
-      throw new Error(`Failed to add food: ${errorResponse.message}`);
+      throw new Error(`Failed to add food: ${errorResponse.error}`);
     }
 
     return { success: true };
@@ -238,5 +243,7 @@ export async function addFood(food, userId) {
     return { success: false, error: error.message };
   }
 }
+
+
 
  

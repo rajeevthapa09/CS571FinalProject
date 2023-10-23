@@ -72,92 +72,6 @@ app.patch('/notes/:userEmail/note/:noteID', async (req, res) => {
 //----------------------------------------------------------------------------
 // Rahel api for Foods
 //-------------------------------------------------------------------------------
-// app.post("/users", async (req, res) => {
-//   try {
-//     const user = req.body;
-//     const result = await collection.insertOne(user);
-//     res.status(200).json({ success: true, data: result });
-//   } catch (error) {
-//     console.error("Error creating a new user:", error);
-//     res.status(500).json({ success: false, error: "Cannot create a new user" });
-//   }
-// });
-// app.put("/users/:userId/foods", async (req, res) => {
-//   try {
-//     const food = req.body;
-//     food._id = new ObjectId();
-//     const userId = req.params.userId;
-
-//     const result = await collection.updateOne(
-//       { email: userId },
-//       { $push: { foods: food } }
-//     );
-
-//     if (result.matchedCount > 0) {
-//       // Check if any documents were matched and modified
-//       res.status(200).json({ success: true, data: result });
-//     } else {
-//       res.status(404).json({ success: false, error: "User not found" });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: "Server error" });
-//   }
-// });
-
-
-// app.patch("/users/:userId/foods/:foodId", async (req, res) => {
-//   try {
-//     const { name, origin, price, date, quantity } = req.body;
-//     const userId = req.params.userId;
-//     const foodId = req.params.foodId;
-
-//     const result = await collection.updateOne(
-//       {
-//         email: userId,
-//         "foods._id": new ObjectId(foodId),
-//       },
-//       {
-//         $set: {
-//           "foods.$.name": name,
-//           "foods.$.origin": origin,
-//           "foods.$.price": price,
-//           "foods.$.quantity": quantity,
-//           "foods.$.date": date,
-//         }
-//       }
-//     );
-
-//     if (result.modifiedCount === 0) {
-//       return res.status(404).json({ success: false, error: "Food not found for the user" });
-//     }
-
-//     res.status(200).json({ success: true, data: result });
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: "Server error" });
-//   }
-// });
-
-// app.delete("/users/:userId/foods/:foodId", async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const foodId = req.params.foodId;
-
-//     const result = await collection.updateOne(
-//       {
-//         email: userId
-//       },
-//       { $pull: { foods: { _id: new ObjectId(foodId) } }
-//     });
-
-//     if (result.modifiedCount === 0) {
-//       return res.status(404).json({ success: false, error: "Food not found for the user" });
-//     }
-
-//     res.status(200).json({ success: true, data: result });
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: "Server error" });
-//   }
-// });
 
 
 //create food for a restaturant
@@ -187,8 +101,6 @@ app.get('/users/:userEmail/foods', async (req, res) => {
   }
 })
 
-
-
 //delete food for a restaurant
 app.delete('/users/:userEmail/foods/:foodId', async (req, res) => {
   try {
@@ -201,8 +113,13 @@ app.delete('/users/:userEmail/foods/:foodId', async (req, res) => {
 
       },
 
-      { $pull: { food: { _id: new ObjectId(req.params.foodId)
-      } } }
+      {
+        $pull: {
+          food: {
+            _id: new ObjectId(req.params.foodId)
+          }
+        }
+      }
 
     );
 

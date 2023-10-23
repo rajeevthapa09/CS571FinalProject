@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useState } from 'react';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import GlobalContext from "./utils/context"
+import GlobalContext from './utils/context';
 import Constants from 'expo-constants';
 import NavigationNotes from './stackScreen/NavigationNotes';
 import FoodsScreen from "./stackScreen/FoodsScreen"

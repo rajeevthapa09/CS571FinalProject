@@ -1,5 +1,6 @@
 
 //Wengel Code
+import { useState } from "react";
 
 export default {};
 
@@ -141,101 +142,101 @@ export async function editNotes(emailID, noteID, data) {
 
 //Rahel's code
 
-function formatDateToMMDDYYYY(date) {
-    const mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const dd = String(date.getDate()).padStart(2, '0');
-    const yyyy = date.getFullYear();
-    return `${mm}-${dd}-${yyyy}`;
+
+function getCurrentDate() {
+  const today = new Date();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Current month
+  const dd = String(today.getDate()).padStart(2, '0'); // Current day
+  const yyyy = today.getFullYear(); // Current year
+  return `${mm}-${dd}-${yyyy}`;
 }
 
 let foods = [
-    { name: 'Noodle', origin: 'Vietnam', price: 8.99, quantity: 2, date: formatDateToMMDDYYYY(new Date()), image: 'https://picsum.photos/200' },
-    { name: 'LoMein', origin: 'Nepal', price: 6.99,quantity: 4, date: formatDateToMMDDYYYY(new Date()), image: 'https://picsum.photos/200' },
-    { name: 'Paneer', origin: 'USA', price: 4.99, quantity: 4,date: formatDateToMMDDYYYY(new Date()), image: 'https://picsum.photos/200' },
-    { name: 'Tikka', origin: 'Mongolia', price: 3.99, quantity: 4,date: formatDateToMMDDYYYY(new Date()), image: 'https://picsum.photos/200' },
-    { name: 'Injera', origin: 'Ethiopia', price: 4.99,quantity: 4, date: formatDateToMMDDYYYY(new Date()), image: 'https://picsum.photos/200' }
+    { name: 'Noodle', origin: 'Vietnam', price: 8.99, quantity: 2, date: getCurrentDate(), image: 'https://picsum.photos/200' },
+    { name: 'LoMein', origin: 'Nepal', price: 6.99,quantity: 4, date: getCurrentDate(), image: 'https://picsum.photos/200' },
+    { name: 'Paneer', origin: 'USA', price: 4.99, quantity: 4,date: getCurrentDate(), image: 'https://picsum.photos/200' },
+    { name: 'Tikka', origin: 'Mongolia', price: 3.99, quantity: 4,date: getCurrentDate(), image: 'https://picsum.photos/200' },
+    { name: 'Injera', origin: 'Ethiopia', price: 4.99,quantity: 4, date: getCurrentDate(), image: 'https://picsum.photos/200' }
 ]
 
-export async function getFoodList() {
-    try {
-      const response = await fetch("http://localhost:5001/restaurants/restaurantId/foods", {
-        method: "GET",
-        headers: {
-          "content-type": "application/json"
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+export async function getFoodList(userId) {
+  try {
+    const response = await fetch(`http://localhost:5001/users/${userId}/foods`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json"
       }
+    });
 
-      const foods = await response.json();
-      return { success: true, data: foods };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
     }
+
+    const foods = await response.json();
+    return { success: true, data: foods };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
+}
 
-  export async function deleteFood(foodId) {
-    try {
-      const response = await fetch(`http://localhost:5001/restaurants/restaurantId/foods/${foodId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Failed to delete food: ${errorResponse.message}`);
+export async function deleteFood(userId, foodId) {
+  try {
+    const response = await fetch(`http://localhost:5001/users/${userId}/foods/${foodId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
       }
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
+    });
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Failed to delete food: ${errorResponse.message}`);
     }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
+}
 
-  export async function editFood(foodId, updatedFoodData) {
-    try {
-      const response = await fetch(`http://localhost:5001/restaurants/restaurantId/foods/${foodId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updatedFoodData)
-      });
+export async function editFood(userId, foodId, updatedFoodData) {
+  try {
+    const response = await fetch(`http://localhost:5001/users/${userId}/foods/${foodId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(updatedFoodData)
+    });
 
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Failed to update food: ${errorResponse.message}`);
-      }
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Failed to update food: ${errorResponse.message}`);
     }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
+}
 
+export async function addFood(food, userId) {
+  try {
+    const response = await fetch(`http://localhost:5001/users/${userId}/foods`, {
+      method: "POST", // Change the method to POST for creating a new food item
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(food) // Send the 'food' object in the request body
+    });
 
-  export async function addFood(food, restaurantId) {
-    try {
-      const response = await fetch(`http://localhost:5001/restaurants/${restaurantId}/foods`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(food) // Send the 'food' object in the request body
-      });
-
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(`Failed to add food: ${errorResponse.message}`);
-      }
-
-      // Assuming 'foods' is an array you want to push to, it should be updated after a successful response.
-      // Note that you should probably use a more centralized state management method, such as Redux, in a real application.
-      // foods.push(food);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      throw new Error(`Failed to add food: ${errorResponse.message}`);
     }
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
+}
+
+ 

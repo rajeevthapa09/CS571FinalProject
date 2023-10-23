@@ -8,7 +8,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useState } from "react";
 import GlobalContext from "../../utils/context";
-import { updateProfiles } from "../../network";
+import { updateProfiles } from "../../utils/network";
 
 export default function UpdateProfile({ route }) {
   const [name, setName] = useState(route.params.updateFile.name);

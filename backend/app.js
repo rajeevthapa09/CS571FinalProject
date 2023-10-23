@@ -11,7 +11,10 @@ let COLLECTION_NAME = "restaurants";
 
 async function connectDB() {
   try {
-   const client = new MongoClient("mongodb+srv://rteklu:test@cluster0.s8juunh.mongodb.net/");
+    //mongodb://localhost:27017
+      const client = new MongoClient("mongodb://localhost:27017/");
+
+   //const client = new MongoClient("mongodb+srv://rteklu:test@cluster0.s8juunh.mongodb.net/");
    await client.connect();
     db = client.db("RestaurantManagement");
     console.log('DB connected');

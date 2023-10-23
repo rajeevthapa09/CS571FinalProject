@@ -11,7 +11,7 @@ let COLLECTION_NAME = "restaurants";
 
 async function connectDB() {
   try {
-    const client = new MongoClient("mongodb://127.0.0.1:27017");
+    const client = new MongoClient("mongodb+srv://rteklu:test@cluster0.s8juunh.mongodb.net/");
     await client.connect();
     db = client.db("RestaurantManagement");
     console.log('DB connected');
@@ -72,99 +72,194 @@ app.patch('/notes/:userEmail/note/:noteID', async (req, res) => {
 //----------------------------------------------------------------------------
 // Rahel api for Foods
 //-------------------------------------------------------------------------------
+// app.post("/users", async (req, res) => {
+//   try {
+//     const user = req.body;
+//     const result = await collection.insertOne(user);
+//     res.status(200).json({ success: true, data: result });
+//   } catch (error) {
+//     console.error("Error creating a new user:", error);
+//     res.status(500).json({ success: false, error: "Cannot create a new user" });
+//   }
+// });
+// app.put("/users/:userId/foods", async (req, res) => {
+//   try {
+//     const food = req.body;
+//     food._id = new ObjectId();
+//     const userId = req.params.userId;
 
-app.post("/restaurants", async (req, res) => {
-  try {
-    const user = req.body;
-    const result = await collection.insertOne(user);
-    res.status(200).send({ success: true, data: result });
-  } catch (error) {
-    console.error("Error creating a new restaurant:", error);
-    res
-      .status(500)
-      .send({ success: false, error: "Can not create a new restaurant" });
-  }
-});
+//     const result = await collection.updateOne(
+//       { email: userId },
+//       { $push: { foods: food } }
+//     );
 
-app.put("/restaurants/:restaurantId/foods", async (req, res) => {
+//     if (result.matchedCount > 0) {
+//       // Check if any documents were matched and modified
+//       res.status(200).json({ success: true, data: result });
+//     } else {
+//       res.status(404).json({ success: false, error: "User not found" });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ success: false, error: "Server error" });
+//   }
+// });
+
+
+// app.patch("/users/:userId/foods/:foodId", async (req, res) => {
+//   try {
+//     const { name, origin, price, date, quantity } = req.body;
+//     const userId = req.params.userId;
+//     const foodId = req.params.foodId;
+
+//     const result = await collection.updateOne(
+//       {
+//         email: userId,
+//         "foods._id": new ObjectId(foodId),
+//       },
+//       {
+//         $set: {
+//           "foods.$.name": name,
+//           "foods.$.origin": origin,
+//           "foods.$.price": price,
+//           "foods.$.quantity": quantity,
+//           "foods.$.date": date,
+//         }
+//       }
+//     );
+
+//     if (result.modifiedCount === 0) {
+//       return res.status(404).json({ success: false, error: "Food not found for the user" });
+//     }
+
+//     res.status(200).json({ success: true, data: result });
+//   } catch (error) {
+//     res.status(500).json({ success: false, error: "Server error" });
+//   }
+// });
+
+// app.delete("/users/:userId/foods/:foodId", async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const foodId = req.params.foodId;
+
+//     const result = await collection.updateOne(
+//       {
+//         email: userId
+//       },
+//       { $pull: { foods: { _id: new ObjectId(foodId) } }
+//     });
+
+//     if (result.modifiedCount === 0) {
+//       return res.status(404).json({ success: false, error: "Food not found for the user" });
+//     }
+
+//     res.status(200).json({ success: true, data: result });
+//   } catch (error) {
+//     res.status(500).json({ success: false, error: "Server error" });
+//   }
+// });
+
+
+//create food for a restaturant
+
+app.put('/users/:userEmail/foods', async (req, res) => {
   try {
     const food = req.body;
-    food._id = new ObjectId();
-    const restaurantId = req.params.restaurantId; // Corrected the parameter name
+    const ret = await db.collection(COLLECTION_NAME).updateOne({ email: req.params.userEmail },
+      {
+        $push: { foods: food }
+      });
+    res.status(200).send({ success: true, data: ret });
+  } catch (err) {
+    res.status(500).send({ success: false, err: "DB error" })
+  }
+})
 
-    const result = await collection.updateOne(
-      { _id: new ObjectId(restaurantId) }, // Corrected the filter
-      { $push: { foods: food } }
+//get all foods of a specific restaurant
+
+app.get('/users/:userEmail/foods', async (req, res) => {
+  try {
+    const ret = await db.collection(COLLECTION_NAME).findOne({ email: req.params.userEmail });
+    const food = ret.foods;
+    res.status(200).send({ success: true, data: ret.food });
+  } catch (err) {
+    res.status(500).send({ success: false, err: "DB error" })
+  }
+})
+
+
+
+//delete food for a restaurant
+app.delete('/users/:userEmail/foods/:foodId', async (req, res) => {
+  try {
+
+    const result = await db.collection(COLLECTION_NAME).updateOne(
+
+      {
+
+        email: req.params.userEmail,
+
+      },
+
+      { $pull: { food: { _id: new ObjectId(req.params.foodId)
+      } } }
+
     );
 
-    if (result.matchedCount > 0) {
-      // Check if any documents were matched and modified
-      res.status(200).send({ success: true, data: result });
-    } else {
-      res.status(404).send({ success: false, error: "Restaurant not found" });
-    }
-  } catch (error) {
-    res.status(500).send({ success: false, error: "Server error" });
-  }
-});
+    res.send({ success: true, data: result });
 
-app.patch("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
-  try {
-    const { name, origin, price, date, quantity } = req.body;
-    const restaurantId = req.params.restaurantId;
-    const foodId = req.params.foodId;
-    const result = await collection.updateOne(
-      {
-        _id: new ObjectId(restaurantId),
-        "foods._id": new ObjectId(foodId),
-      },
-      {
-        $set: {
-          "foods.$.name": name,
-          "foods.$.origin": origin,
-          "foods.$.price": price,
-          "foods.$.quantity": quantity,
-          "foods.$.date": date,
+  } catch (error) {
+
+    res.send({ success: false, error: "error" });
+
+  }
+
+}
+
+);
+
+
+//update part of a food item
+
+app.patch(
+
+  "/users/:userEmail/foods/:foodId",
+
+  async (req, res) => {
+
+    try {
+
+      const food = req.body;
+
+      const result = await db.collection(COLLECTION_NAME).updateOne(
+
+        {
+
+          email: req.params.userEmail,
+
+          "foods._id": new ObjectId(req.params.foodId)
+
+        },
+
+        {
+
+          $set: { "foods.$": food },
+
         }
-      }
-    );
-    res.status(200).send({ success: true, data: result });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Server error" });
-  }
-});
 
-app.delete("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
-  try {
-    const result = await collection.updateOne(
-      {
-        _id: new ObjectId(req.params.restaurantId)
-      },
-      { $pull: { foods: { _id: new ObjectId(req.params.foodId) } } }
-    );
+      );
 
-    res.status(200).send({ success: true, data: result });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Server error" });
-  }
-});
+      res.send({ sucesss: true, data: result });
 
-app.get("/restaurants/:restaurantId/foods", async (req, res) => {
-  try {
-    const restaurantId = req.params.restaurantId;
-    const user = await collection.findOne({ _id: new ObjectId(restaurantId) });
+    } catch (error) {
 
-    if (!user) {
-      return res.status(404).json({ success: false, error: "restaurant not found" });
+      res.send({ success: false, error: "error" });
+
     }
 
-    const foods = user.foods || [];
-
-    res.status(200).json({ success: true, data: foods });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Server error" });
   }
-});
+
+);
 //----------------------------------------------------------------------------
 // end of Rahel api for Foods
 //-------------------------------------------------------------------------------

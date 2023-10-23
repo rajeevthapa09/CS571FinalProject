@@ -97,11 +97,11 @@ export default function Food() {
             <TouchableHighlight style={styles.button} onPress={addFood}>
                 <Text style={styles.buttonText}>Add Food</Text>
             </TouchableHighlight>
-            <View style={styles.foods}>
+            {/* <View style={styles.foods}>
                 <View style={{ flex: 1.5 }}><Text>Food</Text></View>
                 <View style={{ flex: 1.25 }}><Text>Dates</Text></View>
                 <View style={{ flex: 1 }}><Text></Text></View>
-            </View>
+            </View> */}
             <FlatList
                 data={foods}
                 renderItem={({ item, index }) => (<View style={styles.foods}>
@@ -120,11 +120,11 @@ export default function Food() {
 function Display({ food, setFoods }) {
     const navigation = useNavigation();
     const viewPressed = () => {
-        navigation.navigate('notesDetails', food);
+        navigation.navigate('foodDetails', food);
     }
 
     const editPressed = () => {
-        navigation.navigate('editNotes', { food, setFoods });
+        navigation.navigate('editFoods', { food, setFoods });
     }
     return (
         <View style={{ flexDirection: "column" }}>

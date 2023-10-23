@@ -152,30 +152,41 @@ function getCurrentDate() {
 }
 
 
-export async function getFoodList(userEmail) {
+export async function getFoodList(emailID) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
-    }
-
-    const foods = await response.json();
-    return { success: true, data: foods };
+      const response = await fetch(`http://localhost:5001/foods/${emailID}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      const result = await response.json();
+      return result;
   } catch (error) {
-    return { success: false, error: error.message };
+      return null;
   }
 }
 
 
-export async function deleteFood(userEmail, foodId) {
+export async function addFood(emailID, data) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods/${foodId}`, {
+      const response = await fetch(`http://localhost:5001/foods/${emailID}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      const result = await response.json();
+      return result;
+  } catch (error) {
+      return null;
+  }
+}
+
+export async function deleteFood(userEmail, foodID) {
+  try {
+    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods/${foodID}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -194,43 +205,23 @@ export async function deleteFood(userEmail, foodId) {
 }
 
 
-export async function editFood(userEmail, updatedFoodData) {
+
+export async function editFood(emailID, foodID, data) {
   try {
-    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(updatedFoodData)
-    });
-
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(`Failed to update food: ${errorResponse.error}`);
-    }
-
-    return { success: true };
+      const response = await fetch(`http://localhost:5001/users/${emailID}/foods/${foodID}`, {
+          method: 'PATCH',
+          body: JSON.stringify(data),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      const result = await response.json();
+      return result;
   } catch (error) {
-    return { success: false, error: error.message };
+      return null;
   }
 }
 
-export async function addFood(userEmail, food) {
-  try {
-    const response = await fetch(`http://localhost:5001/users/${userEmail}/foods`, {
-      method: "POST", // Change the method to POST for creating a new food item
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(food) // Send the 'food' object in the request body
-    });
-
-    const json = await response.json();
-    return  json;
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
 
 
 

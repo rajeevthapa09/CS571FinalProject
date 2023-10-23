@@ -11,8 +11,8 @@ let COLLECTION_NAME = "restaurants";
 
 async function connectDB() {
   try {
-    const client = new MongoClient("mongodb+srv://rteklu:test@cluster0.s8juunh.mongodb.net/");
-    await client.connect();
+   const client = new MongoClient("mongodb+srv://rteklu:test@cluster0.s8juunh.mongodb.net/");
+   await client.connect();
     db = client.db("RestaurantManagement");
     console.log('DB connected');
   } catch (err) {
@@ -102,7 +102,7 @@ app.get('/users/:userEmail/foods', async (req, res) => {
 })
 
 //delete food for a restaurant
-app.delete('/users/:userEmail/foods/:foodId', async (req, res) => {
+app.delete('/users/:userEmail/foods/:foodID', async (req, res) => {
   try {
 
     const result = await db.collection(COLLECTION_NAME).updateOne(
@@ -116,7 +116,7 @@ app.delete('/users/:userEmail/foods/:foodId', async (req, res) => {
       {
         $pull: {
           food: {
-            _id: new ObjectId(req.params.foodId)
+            _id: new ObjectId(req.params.foodID)
           }
         }
       }
@@ -140,7 +140,7 @@ app.delete('/users/:userEmail/foods/:foodId', async (req, res) => {
 
 app.patch(
 
-  "/users/:userEmail/foods/:foodId",
+  "/users/:userEmail/foods/:foodID",
 
   async (req, res) => {
 
@@ -154,7 +154,7 @@ app.patch(
 
           email: req.params.userEmail,
 
-          "foods._id": new ObjectId(req.params.foodId)
+          "foods._id": new ObjectId(req.params.foodID)
 
         },
 

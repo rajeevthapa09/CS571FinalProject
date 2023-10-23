@@ -22,7 +22,7 @@ const AddFood = ({ route }) => {
   const addFoodsBtn = async () => {
     try {
       const res = await addFood("rahel@gggg", { name, origin, price, quantity, date, image });
-          const setNotes = route.params;
+          const setFoods = route.params;
   // setNotes(res.data);
   //     navigate.goBack();
     } catch (error) {

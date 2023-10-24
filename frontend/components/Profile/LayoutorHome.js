@@ -8,7 +8,11 @@ import { useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LayoutorHome() {
-  const [state, setState] = useState({ token: null, profile: {}, userInfo: {} });
+  const [state, setState] = useState({
+    token: null,
+    profile: {},
+    userInfo: {},
+  });
   useEffect(() => {
     const getToken = async () => {
       try {
@@ -23,7 +27,6 @@ export default function LayoutorHome() {
       } catch (error) {
         console.error("Error retrieving token from AsyncStorage", error);
       }
-
     };
 
     getToken();

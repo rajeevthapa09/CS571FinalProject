@@ -27,8 +27,8 @@ export default function Profile() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    async function getData(){
-      try{
+    async function getData() {
+      try {
         const savedUser = await AsyncStorage.getItem("userInfo");
         const currentUser = JSON.parse(savedUser);
         console.log("currentUser", currentUser);
@@ -38,9 +38,8 @@ export default function Profile() {
           email: currentUser.email,
           password: "",
           address: currentUser.address,
-        })
-
-      }catch(error){
+        });
+      } catch (error) {
         console.log(error);
       }
     }
@@ -58,32 +57,51 @@ export default function Profile() {
   };
 
   const updatebtn = () => {
-    // navigation.navigate("update", { updateFile });
     (async () => {
       try {
         const res = await updateProfiles(state.token, updateFile);
         console.log(res, "res");
-  
+
         if (res && res.success) {
-          setState({ ...state, profile: {...updateFile}, userInfo:{...updateFile} });
-          alert("Successfully Updated")
+          setState({
+            ...state,
+            profile: { ...updateFile },
+            userInfo: { ...updateFile },
+          });
+          alert("Successfully Updated");
           try {
-            await AsyncStorage.setItem("userInfo", JSON.stringify({ name: updateFile.name, phone: updateFile.phone, email: updateFile.email, address: updateFile.address }));
+            await AsyncStorage.setItem(
+              "userInfo",
+              JSON.stringify({
+                name: updateFile.name,
+                phone: updateFile.phone,
+                email: updateFile.email,
+                address: updateFile.address,
+              })
+            );
           } catch (error) {
             console.log(error);
           }
-          setUpdateFile({ ...updateFile, password: "" }); 
+          setUpdateFile({ ...updateFile, password: "" });
         }
       } catch (error) {
         // alert("error");
         console.log(error);
       }
-    })()
+    })();
   };
 
   return (
     <View style={styles.container}>
-      <Text>update </Text>
+      <Text
+        style={{
+          color: "black",
+          fontSize: 16,
+          fontWeight: "bold",
+        }}
+      >
+        Update Profile
+      </Text>
       <TextInput
         style={styles.input}
         value={updateFile.name}
@@ -101,7 +119,7 @@ export default function Profile() {
         style={styles.input}
         value={updateFile.email}
         onChangeText={(text) => setUpdateFile({ ...updateFile, email: text })}
-        editable = {false}
+        editable={false}
         maxLength={10}
         placeholder="email"
       />
@@ -142,7 +160,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "gray",
   },
   input: {
     width: "80%",

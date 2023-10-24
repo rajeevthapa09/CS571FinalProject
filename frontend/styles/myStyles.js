@@ -12,12 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#008000",
     paddingTop: 20,
   },
-  addReview: {
-    fontSize: 25,
-    color: "#008000",
-    textAlign: "center",
-    margin: 20,
-  },
+
   input: {
     padding: 10,
     marginVertical: 10,
@@ -26,15 +21,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
   },
-  infoHeader: {
-    padding: 20
-  },
-  info: {
-    marginTop: 20,
-  },
+
   errorMsg: {
     fontSize: 24,
-    color: 'red'
+    color: "red",
   },
   name: {
     fontSize: 20,
@@ -44,10 +34,7 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 20,
   },
-  faculty: {
-    color: 'grey',
-    marginBottom: 5,
-  },
+
   submitButton: {
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -59,87 +46,87 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontSize: 16,
     color: "#ffff",
-    textAlign: "center"
+    textAlign: "center",
   },
   row: {
-    flex: .5,
-    flexDirection: 'row',
+    flex: 0.5,
+    flexDirection: "row",
     padding: 20,
     borderBottomWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   edges: {
-    flex: .5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 0.5,
+    alignItems: "center",
+    justifyContent: "center",
     padding: 5,
     minWidth: 25,
   },
   button: {
     borderWidth: 1,
-    borderColor: '#0066CC',
+    borderColor: "#0066CC",
     borderRadius: 14,
     width: 80,
     paddingHorizontal: 10,
     paddingVertical: 3,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   buttonText: {
-    color: '#0066CC',
+    color: "#0066CC",
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   info: {
     marginHorizontal: 40,
     marginVertical: 10,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 4,
   },
   title: {
     padding: 30,
     fontSize: 30,
-    textAlign: 'center',
-    color: '#0066CC',
-    fontWeight: '300',
+    textAlign: "center",
+    color: "#0066CC",
+    fontWeight: "300",
   },
   notes: {
     flex: 0.05,
     flexDirection: "row",
-    padding: 10
+    padding: 10,
   },
   buttonNotes: {
     borderWidth: 1,
-    borderColor: '#0066cc',
+    borderColor: "#0066cc",
     borderRadius: 14,
     paddingHorizontal: 10,
     paddingVertical: 3,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     marginTop: 10,
     width: 90,
-    marginLeft: "75%"
+    marginLeft: "75%",
   },
   buttonTextNotes: {
-    color: '#0066CC',
+    color: "#0066CC",
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   edgesNotes: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 5,
     minWidth: 50,
   },
   buttonTextNotes: {
-    color: '#0066CC',
+    color: "#0066CC",
     fontSize: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
   notesHeader: {
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 });
 

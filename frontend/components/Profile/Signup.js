@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useState } from "react";
-import { mysignup } from "../../network";
+import { mysignup } from "../../utils/network";
 import GlobalContext from "../../utils/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function SignUp() {
@@ -22,6 +22,15 @@ export default function SignUp() {
   const navigation = useNavigation();
   const handlegoback = () => {
     navigation.navigate("login");
+  };
+
+  const handleTextInputChange = (text) => {
+    const numericValue = text.replace(/[^0-9]/g, '');
+
+    if (numericValue !== text) {
+      window.alert("Only numbers are allowed");
+    }
+    setSignup({ ...signup, phone: numericValue });
   };
 
   const handlesignup = async () => {
@@ -62,7 +71,7 @@ export default function SignUp() {
         navigation.navigate("login");
         alert("added succesfully");
       } else {
-        alert("cannot add");
+        alert("Email already exists");
       }
     } catch (error) {
       alert(" SOMETHING IS WRONG");
@@ -70,8 +79,8 @@ export default function SignUp() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Please signup </Text>
+    <View style={[styles.container, {backgroundColor: "white"}]}>
+      <Text style={styles.headerText}>Please signup </Text>
       <TextInput
         style={styles.input}
         value={signup.name}
@@ -81,7 +90,7 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         value={signup.phone}
-        onChangeText={(text) => setSignup({ ...signup, phone: text })}
+        onChangeText={handleTextInputChange}
         placeholder="Phone"
       />
       <TextInput
@@ -101,7 +110,8 @@ export default function SignUp() {
         style={styles.input}
         value={signup.address}
         onChangeText={(text) => setSignup({ ...signup, address: text })}
-        maxLength={10}
+        multiline={true}
+        numberOfLines={4}
         placeholder="address"
       />
 
@@ -120,7 +130,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "gray",
   },
   input: {
     width: "80%",
@@ -140,6 +149,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  headerText: {
+    color: "black",
     fontSize: 16,
     fontWeight: "bold",
   },

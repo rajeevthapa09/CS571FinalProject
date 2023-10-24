@@ -1,9 +1,13 @@
-import { View, Text, StyleSheet, TouchableHighlight, FlatList } from "react-native"
+import { View, Text, StyleSheet, TouchableHighlight, FlatList, ScrollView } from "react-native"
 import { useNavigation } from '@react-navigation/native';
 import { getNotes } from "../../utils/network";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import GlobalContext from "../../utils/context";
+import styles from "../../styles/myStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Notes() {
+    const { state, setState } = useContext(GlobalContext)
 
     const [notes, setNotes] = useState([]);
 
@@ -14,8 +18,15 @@ export default function Notes() {
 
     useEffect(() => {
         (async () => {
+            let currentUser = null
             try {
-                const res = await getNotes("test@test.com");
+                try {
+                    const savedUser = await AsyncStorage.getItem("userInfo");
+                    currentUser = JSON.parse(savedUser);
+                } catch (error) {
+                    console.log(error);
+                }
+                const res = await getNotes(currentUser.email, state.token);
                 setNotes((prev) => res.data);
             } catch (error) {
                 console.log(error);
@@ -24,13 +35,14 @@ export default function Notes() {
     }, [])
 
     return (
-        <View>
-            <TouchableHighlight style={styles.button} onPress={addNote}>
-                <Text style={styles.buttonText}>Add Note</Text>
+        <ScrollView showsVerticalScrollIndicator={true} persistentScrollbar={true} style={{ backgroundColor: "white", flex: 1 }}>
+        {/* <View style={{ backgroundColor: "white", flex: 1 }}> */}
+            <TouchableHighlight style={[styles.buttonNotes, { width: 80, marginLeft: 269, borderRadius: 5 }]} onPress={addNote}>
+                <Text style={styles.buttonTextNotes}>Add Note</Text>
             </TouchableHighlight>
             <View style={styles.notes}>
-                <View style={{ flex: 1.5 }}><Text>Notes</Text></View>
-                <View style={{ flex: 1.25 }}><Text>Dates</Text></View>
+                <View style={{ flex: 1.5 }}><Text style={styles.notesHeader}>Notes</Text></View>
+                <View style={{ flex: 1.25 }}><Text style={styles.notesHeader}>Dates</Text></View>
                 <View style={{ flex: 1 }}><Text></Text></View>
             </View>
             <FlatList
@@ -44,7 +56,8 @@ export default function Notes() {
                 scrollIndicatorInsets={{ right: 3 }}
             />
 
-        </View>
+        {/* </View> */}
+        </ScrollView>
     )
 }
 
@@ -58,67 +71,67 @@ function Display({ note, setNotes }) {
         navigation.navigate('editNotes', { note, setNotes });
     }
     return (
-        <View style={{ flexDirection: "column" }}>
+        <View style={{ flexDirection: "row" }}>
             <View style={styles.edges}>
                 <TouchableHighlight
                     onPress={viewPressed}
-                    style={styles.button}
+                    style={[styles.button, { width: 45, borderRadius: 5 }]}
                     underlayColor="#5398DC">
-                    <Text style={styles.buttonText}>View</Text>
+                    <Text style={[styles.buttonText, { fontSize: 10 }]}>View</Text>
                 </TouchableHighlight>
             </View>
             <View style={styles.edges}>
                 <TouchableHighlight
                     onPress={editPressed}
-                    style={styles.button}
+                    style={[styles.button, { width: 45, borderRadius: 5 }]}
                     underlayColor="#5398DC">
-                    <Text style={styles.buttonText}>Edit</Text>
+                    <Text style={[styles.buttonText, { fontSize: 10 }]}>Edit</Text>
                 </TouchableHighlight>
             </View>
         </View>
     )
 }
 
-const styles = StyleSheet.create({
-    notes: {
-        flex: 1,
-        flexDirection: "row",
-        padding: 10
-    },
-    button: {
-        borderWidth: 1,
-        borderColor: '#0066cc',
-        borderRadius: 14,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        backgroundColor: '#fff',
-        marginTop: 10,
-        width: 90,
-        marginLeft: "75%"
-    },
-    buttonText: {
-        color: '#0066CC',
-        fontSize: 12,
-        textAlign: 'center',
-    },
-    edges: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 5,
-        minWidth: 50,
-    },
-    button: {
-        borderWidth: 1,
-        borderColor: '#0066CC',
-        borderRadius: 14,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        backgroundColor: '#fff',
-    },
-    buttonText: {
-        color: '#0066CC',
-        fontSize: 12,
-        textAlign: 'center',
-    },
-})
+// const styles = StyleSheet.create({
+//     notes: {
+//         flex: 1,
+//         flexDirection: "row",
+//         padding: 10
+//     },
+//     button: {
+//         borderWidth: 1,
+//         borderColor: '#0066cc',
+//         borderRadius: 14,
+//         paddingHorizontal: 10,
+//         paddingVertical: 3,
+//         backgroundColor: '#fff',
+//         marginTop: 10,
+//         width: 90,
+//         marginLeft: "75%"
+//     },
+//     buttonText: {
+//         color: '#0066CC',
+//         fontSize: 12,
+//         textAlign: 'center',
+//     },
+//     edges: {
+//         flex: 1,
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         padding: 5,
+//         minWidth: 50,
+//     },
+//     button: {
+//         borderWidth: 1,
+//         borderColor: '#0066CC',
+//         borderRadius: 14,
+//         paddingHorizontal: 10,
+//         paddingVertical: 3,
+//         backgroundColor: '#fff',
+//     },
+//     buttonText: {
+//         color: '#0066CC',
+//         fontSize: 12,
+//         textAlign: 'center',
+//     },
+// })

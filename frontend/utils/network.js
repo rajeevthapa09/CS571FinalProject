@@ -89,7 +89,7 @@ export async function updateProfiles(token, myfile) {
 }
 
 //Rajeev Code
-export async function getNotes(emailID,token) {
+export async function getNotes(emailID, token) {
   try {
     const response = await fetch(`http://localhost:5001/notes/${emailID}`, {
       method: "GET",
@@ -126,7 +126,7 @@ export async function addNotes(emailID, data, token) {
 
 export async function editNotes(emailID, noteID, data, token) {
   console.log("emailId", emailID);
-  console.log( "noteId", noteID);
+  console.log("noteId", noteID);
   console.log("data", data);
   console.log("token", token);
   try {
@@ -201,28 +201,23 @@ let foods = [
   },
 ];
 
-export async function getFoodList() {
+export async function getFoodList(token) {
   try {
-    const response = await fetch(
-      "http://localhost:5001/restaurants/restaurantId/foods",
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch data: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const foods = await response.json();
-    return { success: true, data: foods };
+    const response = await fetch("http://127.0.0.1:5001/restaurants/foods", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "content-type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
   } catch (error) {
-    return { success: false, error: error.message };
+    throw new Error(
+      `Failed to fetch data: ${response.status} ${response.statusText}`
+    );
   }
 }
 
@@ -232,6 +227,7 @@ export async function deleteFood(foodId) {
       `http://localhost:5001/restaurants/restaurantId/foods/${foodId}`,
       {
         method: "DELETE",
+        // Accept: "application/json",
         headers: {
           "Content-Type": "application/json",
         },
@@ -271,29 +267,25 @@ export async function editFood(foodId, updatedFoodData) {
   }
 }
 
-export async function addFood(food, restaurantId) {
+export async function addFood(food, token) {
   try {
-    const response = await fetch(
-      `http://localhost:5001/restaurants/${restaurantId}/foods`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(food), // Send the 'food' object in the request body
-      }
-    );
+    const response = await fetch(`http://127.0.0.1:5001/restaurants/foods`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
 
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(`Failed to add food: ${errorResponse.message}`);
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(food),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      return data;
     }
-
-    // Assuming 'foods' is an array you want to push to, it should be updated after a successful response.
-    // Note that you should probably use a more centralized state management method, such as Redux, in a real application.
-    // foods.push(food);
-    return { success: true };
   } catch (error) {
-    return { success: false, error: error.message };
+    return null;
   }
 }

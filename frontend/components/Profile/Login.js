@@ -23,7 +23,16 @@ export default function Login() {
     try {
       const ret = await myLogin(login.email, login.password);
       if (ret && ret.success) {
-        setState({ ...state, token: ret.data.token, userInfo: { name: ret.data.name, phone: ret.data.phone, email: ret.data.email, address: ret.data.address } });
+        setState({
+          ...state,
+          token: ret.data.token,
+          userInfo: {
+            name: ret.data.name,
+            phone: ret.data.phone,
+            email: ret.data.email,
+            address: ret.data.address,
+          },
+        });
         console.log("userinfo", state, "ret", ret);
         try {
           await AsyncStorage.setItem("token", ret.data.token);
@@ -31,11 +40,18 @@ export default function Login() {
           console.log(error);
         }
         try {
-          await AsyncStorage.setItem("userInfo", JSON.stringify({ name: ret.data.name, phone: ret.data.phone, email: ret.data.email, address: ret.data.address }));
+          await AsyncStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              name: ret.data.name,
+              phone: ret.data.phone,
+              email: ret.data.email,
+              address: ret.data.address,
+            })
+          );
         } catch (error) {
           console.log(error);
         }
-
       } else {
         alert("Incorrect Username or Password");
       }
@@ -49,7 +65,15 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Text>Please Login </Text>
+      <Text
+        style={{
+          color: "black",
+          fontSize: 16,
+          fontWeight: "bold",
+        }}
+      >
+        Please Login{" "}
+      </Text>
       <TextInput
         style={styles.input}
         value={login.email}
@@ -65,14 +89,21 @@ export default function Login() {
         secureTextEntry={true}
       />
       <View style={{ flexDirection: "row" }}>
-        <TouchableHighlight style={[styles.submitButton, { width: 75, marginHorizontal: 3 }]} onPress={handleLoginButton}>
+        <TouchableHighlight
+          style={[styles.submitButton, { width: 75, marginHorizontal: 3 }]}
+          onPress={handleLoginButton}
+        >
           <Text style={[styles.submitButtonText, { fontSize: 14 }]}>Login</Text>
         </TouchableHighlight>
-        <TouchableHighlight style={[styles.submitButton, { width: 85, marginHorizontal: 3 }]} onPress={handleSignUpButton}>
-          <Text style={[styles.submitButtonText, { fontSize: 14 }]}>SignUp</Text>
+        <TouchableHighlight
+          style={[styles.submitButton, { width: 85, marginHorizontal: 3 }]}
+          onPress={handleSignUpButton}
+        >
+          <Text style={[styles.submitButtonText, { fontSize: 14 }]}>
+            SignUp
+          </Text>
         </TouchableHighlight>
       </View>
-
     </View>
   );
 }

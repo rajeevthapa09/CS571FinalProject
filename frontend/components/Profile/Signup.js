@@ -71,7 +71,7 @@ export default function SignUp() {
 
   return (
     <View style={styles.container}>
-      <Text>Please signup </Text>
+      <Text style={styles.headerText}>Please signup </Text>
       <TextInput
         style={styles.input}
         value={signup.name}
@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "gray",
   },
   input: {
     width: "80%",
@@ -141,6 +140,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  headerText: {
+    color: "black",
     fontSize: 16,
     fontWeight: "bold",
   },

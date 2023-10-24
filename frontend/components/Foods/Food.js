@@ -11,10 +11,6 @@ const Food = ({ food, onRefresh }) => {
 
   const navigation = useNavigation();
 
-  //   const handleDetail = () => {
-  //     navigation.navigate("fooddetails", { food });
-  //   };
-
   const handleEdit = () => {
     navigation.navigate("editfood", { food, onRefresh });
   };
@@ -25,25 +21,18 @@ const Food = ({ food, onRefresh }) => {
   };
 
   return (
-    <View style={{ backgroundColor: index % 2 === 0 ? "green" : "#008000" }}>
+    <View>
       <View style={styles.row}>
         <View style={styles.name}>
           <Text>Name: {name}</Text>
           <Text>Origin: {origin}</Text>
           <Text>Price: {price}</Text>
-          <Text>Quantity: {quantity}</Text>
+
           <Text>Date: {date}</Text>
           <Text>Image: {image}</Text>
         </View>
 
         <View style={styles.edges}>
-          <TouchableHighlight
-            onPress={handleDetail}
-            style={styles.button}
-            underlayColor="#5398DC"
-          >
-            <Text style={styles.buttonText}>Details</Text>
-          </TouchableHighlight>
           <TouchableHighlight
             onPress={handleEdit}
             style={styles.button}

@@ -246,94 +246,37 @@ app.patch("/notes/:userEmail/note/:noteID", async (req, res) => {
 
 app.post("/restaurants/foods", async (req, res) => {
   const { ownerID } = req.currentuser;
+  const food = req.body;
   try {
-    const food = req.body;
-    const result = await collection(COLLECTION_NAME).updateOne(
-      { _id: new ObjectId(ownerID) },
-      { $push: { foods: { _id: new ObjectId(), ...food } } }
-    );
-    res.status(200).send({ success: true, data: result });
+    await db
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        { _id: new ObjectId(ownerID) },
+        { $push: { foods: { _id: new ObjectId(), ...food } } }
+      );
+    res.status(201).send({ success: true, data: food });
   } catch (error) {
-    console.error("Error creating a new restaurant:", error);
-    res
-      .status(500)
-      .send({ success: false, error: "Can not create a new restaurant" });
-  }
-});
-
-app.get("/restaurants/foods", async (req, res) => {
-  try {
-    const food = req.body;
-    food._id = new ObjectId();
-    const restaurantId = req.params.restaurantId;
-
-    const result = await collection(COLLECTION_NAME).updateOne(
-      { _id: new ObjectId(restaurantId) },
-      { $push: { foods: food } }
-    );
-
-    if (result.matchedCount > 0) {
-      res.status(200).send({ success: true, data: result });
-    } else {
-      res.status(404).send({ success: false, error: "Restaurant not found" });
-    }
-  } catch (error) {
-    res.status(500).send({ success: false, error: "Server error" });
-  }
-});
-
-app.patch("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
-  try {
-    const { name, origin, price, date, quantity } = req.body;
-    const restaurantId = req.params.restaurantId;
-    const foodId = req.params.foodId;
-    const result = await collection.updateOne(
-      {
-        _id: new ObjectId(restaurantId),
-        "foods._id": new ObjectId(foodId),
-      },
-      {
-        $set: {
-          "foods.$.name": name,
-          "foods.$.origin": origin,
-          "foods.$.price": price,
-          "foods.$.quantity": quantity,
-          "foods.$.date": date,
-        },
-      }
-    );
-    res.status(200).send({ success: true, data: result });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Server error" });
-  }
-});
-
-app.delete("/restaurants/:restaurantId/foods/:foodId", async (req, res) => {
-  try {
-    const result = await collection.updateOne(
-      {
-        _id: new ObjectId(req.params.restaurantId),
-      },
-      { $pull: { foods: { _id: new ObjectId(req.params.foodId) } } }
-    );
-
-    res.status(200).send({ success: true, data: result });
-  } catch (error) {
-    res.status(500).json({ success: false, error: "Server error" });
+    console.log(error);
+    return res.status(500).send({ success: false, error: error?.message });
   }
 });
 
 app.get("/restaurants/foods", async (req, res) => {
   const { ownerID } = req.currentuser;
   try {
-    const user = await collection.findOne({ _id: new ObjectId(ownerID) });
-    if (user) {
-      res.status(200).json({ success: true, data: user.foods });
+    const data = await db
+      .collection(COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(ownerID) });
+    if (data) {
+      res.status(200).send({ success: true, data: data.foods });
+    } else {
+      res.status(404).send({ success: false, error: "Owner not found" });
     }
   } catch (error) {
-    res.status(500).json({ success: false, error: "Server error" });
+    return res.status(500).send({ success: false, error: "Cannot get  data" });
   }
 });
+
 //----------------------------------------------------------------------------
 // end of Rahel api for Foods
 //-------------------------------------------------------------------------------

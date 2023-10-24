@@ -1,7 +1,15 @@
-import { Alert, Text, Pressable, TextInput, View } from "react-native";
+import {
+  Alert,
+  Text,
+  Pressable,
+  TextInput,
+  View,
+  StyleSheet,
+} from "react-native";
 import React, { useState, useContext } from "react";
+
 import { useNavigation, useRoute } from "@react-navigation/native";
-import styles from "../../styles/myStyles";
+
 import { addFood } from "../../utils/network";
 import GlobalContext from "../../utils/context";
 
@@ -19,83 +27,90 @@ export default function AddFood({ route }) {
     image: null,
   });
 
-  //   const route = useRoute();
-  //   const { onRefresh } = route.params;
-
   const handleSave = async () => {
     try {
-      // Validate input variables
-      //   if (!foood.name || typeof foood.name !== "string") {
-      //     Alert.alert("Error", "Name must be a non-empty string");
-      //     return;
-      //   }
-
-      //   if (!foood.price || isNaN(parseFloat(foood.price))) {
-      //     Alert.alert("Error", "Price must be a valid number");
-      //     return;
-      //   }
-
-      //   if (!foood.quantity || isNaN(parseFloat(foood.quantity))) {
-      //     Alert.alert("Error", "Price must be a valid number");
-      //     return;
-      //   }
-      //   if (!foood.origin || typeof foood.origin !== "string") {
-      //     Alert.alert("Error", "Origin must be a non-empty string");
-      //     return;
-      //   }
+      if (foood === "") {
+        alert("all fields are required");
+      }
 
       const ret = await addFood(foood, state.token);
 
       onRefresh(); // reload FoodList component
       navigation.goBack();
-    } catch (error) {
-      // setGlobalState({...globalstate, errorMessage:'Unable to save data'})
-    }
+    } catch (error) {}
   };
   return (
     <View style={styles.root}>
       <Text style={styles.title}>Add New Food</Text>
-      {/* <Text style={styles.errorMsg}>{globalstate.errorMessage} </Text> */}
+
       <TextInput
         style={styles.input}
-        placeholder="name"
+        placeholder="Name"
         value={state.name}
         onChangeText={(text) => setfoood({ ...foood, name: text })}
-      ></TextInput>
+      />
 
       <TextInput
         style={styles.input}
-        placeholder="origin"
+        placeholder="Origin"
         value={state.origin}
         onChangeText={(text) => setfoood({ ...foood, origin: text })}
-      ></TextInput>
+      />
 
       <TextInput
         style={styles.input}
-        placeholder="price"
+        placeholder="Price"
         keyboardType="numeric"
         value={state.price}
         onChangeText={(text) => setfoood({ ...foood, price: text })}
-      ></TextInput>
+      />
 
       <TextInput
         style={styles.input}
-        placeholder="mm-dd-yyyy"
+        placeholder="Date (mm-dd-yyyy)"
         keyboardType="numeric"
         value={state.date}
         onChangeText={(text) => setfoood({ ...foood, date: text })}
-      ></TextInput>
+      />
       <TextInput
         style={styles.input}
-        placeholder="image"
+        placeholder="Image URL"
         value={state.image}
         onChangeText={(text) => setfoood({ ...foood, image: text })}
-      ></TextInput>
-      <Pressable style={styles.submitButton}>
-        <Text style={styles.submitButtonText} onPress={handleSave}>
-          Save
-        </Text>
+      />
+      <Pressable style={styles.submitButton} onPress={handleSave}>
+        <Text style={styles.submitButtonText}>Save</Text>
       </Pressable>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  submitButton: {
+    backgroundColor: "#5398DC",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+});

@@ -71,7 +71,7 @@ export default function EditFood() {
                 onChangeText={(text) => setState({ ...state, image: text })}
             ></TextInput>
             <Pressable style={styles.submitButton} >
-                <Text style={styles.submitButtonText} onPress={handleSubmit} >Save</Text>
+                <Text style={styles.submitButtonText} onPress={handleSubmit}>Save</Text>
             </Pressable>
         </View>
     )

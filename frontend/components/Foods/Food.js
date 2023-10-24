@@ -27,8 +27,8 @@ const Food = ({ food, onRefresh }) => {
 
     return (
         <View
-            style={{ backgroundColor: index % 2 === 0 ? 'green' : '#008000' }}>
-            <View style={styles.row}>
+            style={{ backgroundColor: "white" }}>
+            <View >
 
                 <View style={styles.name}>
                     <Text>Name: {name}</Text>

@@ -41,9 +41,6 @@ export default function FoodList() {
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Menu</Text>
-      </View>
       <View style={styles.contentContainer}>
         <TextInput
           style={styles.input}

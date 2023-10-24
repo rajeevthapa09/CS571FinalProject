@@ -24,6 +24,15 @@ export default function SignUp() {
     navigation.navigate("login");
   };
 
+  const handleTextInputChange = (text) => {
+    const numericValue = text.replace(/[^0-9]/g, '');
+
+    if (numericValue !== text) {
+      window.alert("Only numbers are allowed");
+    }
+    setSignup({ ...signup, phone: numericValue });
+  };
+
   const handlesignup = async () => {
     try {
       const res = await mysignup(
@@ -62,7 +71,7 @@ export default function SignUp() {
         navigation.navigate("login");
         alert("added succesfully");
       } else {
-        alert("cannot add");
+        alert("Email already exists");
       }
     } catch (error) {
       alert(" SOMETHING IS WRONG");
@@ -70,7 +79,7 @@ export default function SignUp() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: "white"}]}>
       <Text style={styles.headerText}>Please signup </Text>
       <TextInput
         style={styles.input}
@@ -81,7 +90,7 @@ export default function SignUp() {
       <TextInput
         style={styles.input}
         value={signup.phone}
-        onChangeText={(text) => setSignup({ ...signup, phone: text })}
+        onChangeText={handleTextInputChange}
         placeholder="Phone"
       />
       <TextInput

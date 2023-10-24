@@ -277,6 +277,47 @@ app.get("/restaurants/foods", async (req, res) => {
   }
 });
 
+// Edit Foods
+app.patch("/users/:userEmail/foods", async (req, res) => {
+  try {
+    console.log("req.body.title", req.body);
+    const ret = await db.collection(COLLECTION_NAME).updateOne(
+      {
+        email: req.params.userEmail,
+        "foods._id": new ObjectId(req.body._id),
+      },
+      {
+        $set: {
+          "foods.$.name": req.body.name,
+          "foods.$.origin": req.body.origin,
+          "foods.$.price": req.body.price,
+          "foods.$.date": req.body.date,
+          "foods.$.image": req.body.image,
+        },
+      }
+    );
+    const getData = await db
+      .collection(COLLECTION_NAME)
+      .findOne({ email: req.params.userEmail });
+    res.status(200).send({ success: true, data: getData.foods });
+  } catch (err) {
+    res.status(500).send({ success: false, err: "DB error" });
+  }
+});
+
+//delete foods
+app.delete('/users/:userID/foods/:foodID', async (req, res) => {
+  try {
+      const ret = await db.collection(COLLECTION_NAME).updateOne({email: req.params.userID}, 
+          { $pull: {foods : {_id: new ObjectId(req.params.foodID)} } });
+      res.status(200).send({ success: true, data: ret });
+  } catch (err) {
+      res.status(500).send({ success: false, err: "db error" })
+  }
+})
+
+
+
 //----------------------------------------------------------------------------
 // end of Rahel api for Foods
 //-------------------------------------------------------------------------------

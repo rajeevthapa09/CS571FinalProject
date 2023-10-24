@@ -15,12 +15,25 @@ export default function AddFood({ route }) {
     name: "",
     origin: "",
     price: "",
-    date: "",
+    date: new Date().toLocaleString(),
     image: null,
   });
 
   //   const route = useRoute();
   //   const { onRefresh } = route.params;
+
+  const handGobackEdit = () => {
+    navigation.goBack();
+  }
+
+  const handleTextInputChange = (text) => {
+    const numericValue = text.replace(/[^0-9.]/g, '');
+
+    if (numericValue !== text) {
+      window.alert("Only numbers and decimal values are allowed");
+    }
+    setfoood({ ...foood, price: numericValue });
+  };
 
   const handleSave = async () => {
     try {
@@ -53,20 +66,20 @@ export default function AddFood({ route }) {
     }
   };
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, {backgroundColor: "white"}]}>
       <Text style={styles.title}>Add New Food</Text>
       {/* <Text style={styles.errorMsg}>{globalstate.errorMessage} </Text> */}
       <TextInput
         style={styles.input}
         placeholder="name"
-        value={state.name}
+        value={foood.name}
         onChangeText={(text) => setfoood({ ...foood, name: text })}
       ></TextInput>
 
       <TextInput
         style={styles.input}
         placeholder="origin"
-        value={state.origin}
+        value={foood.origin}
         onChangeText={(text) => setfoood({ ...foood, origin: text })}
       ></TextInput>
 
@@ -74,26 +87,32 @@ export default function AddFood({ route }) {
         style={styles.input}
         placeholder="price"
         keyboardType="numeric"
-        value={state.price}
-        onChangeText={(text) => setfoood({ ...foood, price: text })}
+        value={foood.price}
+        onChangeText={handleTextInputChange}
       ></TextInput>
 
       <TextInput
         style={styles.input}
         placeholder="mm-dd-yyyy"
         keyboardType="numeric"
-        value={state.date}
+        value={foood.date}
+        editable={false}
         onChangeText={(text) => setfoood({ ...foood, date: text })}
       ></TextInput>
       <TextInput
         style={styles.input}
         placeholder="image"
-        value={state.image}
+        value={foood.image}
         onChangeText={(text) => setfoood({ ...foood, image: text })}
       ></TextInput>
       <Pressable style={styles.submitButton}>
         <Text style={styles.submitButtonText} onPress={handleSave}>
           Save
+        </Text>
+      </Pressable>
+      <Pressable style={styles.submitButton}>
+        <Text style={styles.submitButtonText} onPress={handGobackEdit}>
+          Go Back
         </Text>
       </Pressable>
     </View>

@@ -158,48 +158,7 @@ function formatDateToMMDDYYYY(date) {
   return `${mm}-${dd}-${yyyy}`;
 }
 
-let foods = [
-  {
-    name: "Noodle",
-    origin: "Vietnam",
-    price: 8.99,
-    quantity: 2,
-    date: formatDateToMMDDYYYY(new Date()),
-    image: "https://picsum.photos/200",
-  },
-  {
-    name: "LoMein",
-    origin: "Nepal",
-    price: 6.99,
-    quantity: 4,
-    date: formatDateToMMDDYYYY(new Date()),
-    image: "https://picsum.photos/200",
-  },
-  {
-    name: "Paneer",
-    origin: "USA",
-    price: 4.99,
-    quantity: 4,
-    date: formatDateToMMDDYYYY(new Date()),
-    image: "https://picsum.photos/200",
-  },
-  {
-    name: "Tikka",
-    origin: "Mongolia",
-    price: 3.99,
-    quantity: 4,
-    date: formatDateToMMDDYYYY(new Date()),
-    image: "https://picsum.photos/200",
-  },
-  {
-    name: "Injera",
-    origin: "Ethiopia",
-    price: 4.99,
-    quantity: 4,
-    date: formatDateToMMDDYYYY(new Date()),
-    image: "https://picsum.photos/200",
-  },
-];
+
 
 export async function getFoodList(token) {
   try {
@@ -221,39 +180,20 @@ export async function getFoodList(token) {
   }
 }
 
-export async function deleteFood(foodId) {
+
+export async function editFoodItem(emailID, data, token) {
+  console.log("here i am");
   try {
     const response = await fetch(
-      `http://localhost:5001/restaurants/restaurantId/foods/${foodId}`,
+      `http://localhost:5001/users/${emailID}/foods`,
       {
-        method: "DELETE",
-        // Accept: "application/json",
+        method: "PATCH",
+        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      }
-    );
-
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(`Failed to delete food: ${errorResponse.message}`);
-    }
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function editFood(foodId, updatedFoodData) {
-  try {
-    const response = await fetch(
-      `http://localhost:5001/restaurants/restaurantId/foods/${foodId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFoodData),
       }
     );
 
@@ -261,7 +201,7 @@ export async function editFood(foodId, updatedFoodData) {
       const errorResponse = await response.json();
       throw new Error(`Failed to update food: ${errorResponse.message}`);
     }
-    return { success: true };
+    return { success: true, data: response };
   } catch (error) {
     return { success: false, error: error.message };
   }
@@ -286,4 +226,19 @@ export async function addFood(food, token) {
   } catch (error) {
     return null;
   }
+}
+
+
+//delete foods
+export async function deleteFood(emailID, foodID, token) {
+
+  const response = await fetch(`http://localhost:5001/users/${emailID}/foods/${foodID}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+  return result;
 }
